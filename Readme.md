@@ -1,6 +1,12 @@
 # Hector Open-source Simulation Software in MATLAB/Simulink
 
+## HECTOR: Humanoid for Enhanced ConTrol and Open-source Research
+
 This branch contains the MATLAB/Simulink simulation for the Hector humanoid robot. 
+
+<img src="https://github.com/DRCL-USC/Hector_Simulation/blob/Matlab_Simulation/STL%20files/Hector_picture.jpg" width=50% height=50%>
+
+Introduction Video: https://youtu.be/NcW-NFwjMh0
 
 ## Dependencies:
 1. [MATLAB & Simulink 2023a + ](https://www.mathworks.com/?s_tid=gn_logo)

@@ -1,0 +1,62 @@
+<launch>
+    <arg name="wname" default="normal"/>
+    <arg name="rname" default="hector"/>
+    <arg name="robot_path" value="(find $(arg rname)_description)"/>
+    <arg name="dollar" value="$"/>
+
+    <arg name="paused" default="true"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+    <!-- Debug mode will hung up the robot, use "true" or "false" to switch it. -->
+    <arg name="user_debug" default="false"/>
+    
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find unitree_gazebo)/worlds/$(arg wname).world"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+    </include>
+    
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description"
+           command="$(find xacro)/xacro --inorder '$(arg dollar)$(arg robot_path)/xacro/robot.xacro' 
+           DEBUG:=$(arg user_debug)"/>
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <!-- Set trunk and joint positions at startup -->
+    <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
+          args="-urdf 
+          -z 0.545
+          -x 0.0
+          -J L_thigh_joint 0
+          -J L_calf_joint 0
+          -J L_toe_joint 0
+          -J R_thigh_joint 0
+          -J R_calf_joint 0
+          -J R_toe_joint 0
+          -model hector_gazebo -param robot_description "/>
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(arg dollar)$(arg robot_path)/config/robot_control.yaml" command="load"/>
+
+    <!-- load the controllers -->
+    <node pkg="controller_manager" type="spawner" name="controller_spawner" respawn="false"
+          output="screen" ns="/hector_gazebo" args="joint_state_controller
+          L_hip_controller L_hip2_controller L_thigh_controller L_calf_controller L_toe_controller
+          R_hip_controller R_hip2_controller R_thigh_controller R_calf_controller R_toe_controller
+         "/>
+
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"
+          respawn="false" output="screen">
+        <remap from="/joint_states" to="/hector_gazebo/joint_states"/>
+    </node>
+
+
+    <!-- <node pkg="unitree_gazebo" type="servo" name="servo" required="true" output="screen"/> -->
+
+</launch>

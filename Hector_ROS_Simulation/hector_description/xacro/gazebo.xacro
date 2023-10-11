@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<robot>
+    <!-- ros_control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/hector_gazebo</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <!-- Show the trajectory of trunk center. -->
+    <gazebo>
+        <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
+            <frequency>10</frequency>
+            <plot>
+                <link>base</link>
+                <pose>0 0 0 0 0 0</pose>
+                <material>Gazebo/Yellow</material>
+            </plot>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
+            <bodyName>trunk</bodyName>
+            <topicName>/apply_force/trunk</topicName>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>1000</update_rate>
+            <visualize>true</visualize>
+            <topic>__default_topic__</topic>
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <topicName>trunk_imu</topicName>
+                <bodyName>imu_link</bodyName>
+                <updateRateHZ>1000.0</updateRateHZ>
+                <gaussianNoise>0.00</gaussianNoise>
+                <xyzOffset>0 0 0</xyzOffset>
+                <rpyOffset>0 0 0</rpyOffset>
+                <frameName>imu_link</frameName>
+            </plugin>
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
+    </gazebo>
+
+
+    <gazebo reference="base">
+        <material>Gazebo/Green</material>
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="trunk">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+
+     <gazebo reference="trunkcol">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+       
+    </gazebo>
+
+    <gazebo reference="stick_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <!-- L leg -->
+    <gazebo reference="L_hip">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="L_hip2">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="L_thigh">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        
+    </gazebo>
+    <gazebo reference="L_calf">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+    </gazebo>
+    <gazebo reference="L_toe">
+        <mu1>3</mu1>
+        <mu2>3</mu2>
+        <kp  value="1000000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        
+    </gazebo>
+
+    <!--R leg -->
+    <gazebo reference="R_hip">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="R_hip2">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="R_thigh">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+        <material>Gazebo/DarkGrey</material> 
+    </gazebo>
+    <gazebo reference="R_calf">
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <kp  value="100000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+    </gazebo>
+    <gazebo reference="R_toe">
+        <mu1>3</mu1>
+        <mu2>3</mu2>
+        <kp  value="1000000.0"/>
+        <kd  value="1000.0"/>
+        <self_collide>0</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        
+    </gazebo>
+
+</robot>

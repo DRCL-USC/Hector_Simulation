@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.5">
+  <!-- We use a custom world for the robot so that it can be tested in a simple house -->
+  <world name="house_obstacles">
+    
+    <!-- Add a ground plane -->
+    <include>
+        <uri>model://ground_plane</uri>
+        <material>
+            <script>
+                <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+        </material>
+    </include>
+    
+    <!-- Global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include> 
+    
+    <!-- Apartment Walls -->
+    <include>
+      <uri>model://house_obstacles</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+   
+
+  </world>
+</sdf>

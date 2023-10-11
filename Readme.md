@@ -13,7 +13,7 @@ This branch contains the MATLAB/Simulink simulation for the Hector humanoid robo
 + Linux PC may run into problems with path definitions in Simulink (but easily fixable on the user end);
 
 ## Installation:
-+ Download and unzip Hector_Simulation_MATLAB to your desired directory; 
++ Download and unzip Hector_Simulation to your desired directory; 
 + Download and unzip [CasADi MATLAB](https://web.casadi.org/get/) to the same directory;
 + Download and install MATLAB 2023a (or later version);
 

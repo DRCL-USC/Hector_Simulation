@@ -29,7 +29,8 @@ Introduction Video: https://youtu.be/NcW-NFwjMh0
 + Open and run Initiate_Simulation.m to load model and simulation parameters;
 + Open Hector_Simulation.slx and modify simulation base on your need;
 + Press Ctrl + D to build model;
-+ Run model/simulation in Mechanics Explorer (note that simulation does not run in real-time)
++ Run model/simulation in Mechanics Explorer (note that simulation does not run in real-time);
++ User may comment/uncomment arm assembly and control in Simulink model;
 
 ## Cite Us:
 Thank you for choosing our software for your research and development, we highly appreciate your citing our work:

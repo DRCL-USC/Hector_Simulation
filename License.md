@@ -46,7 +46,7 @@ In no event shall Licensor be liable for any damages, including but not limited 
 
 ### 8. Contact Information
 
-For any questions regarding this License, you can contact the author Junheng Li at junhengl@usc.edu.
+For any questions regarding this License, you can contact the author Junheng Li at junhengl@usc.edu. 
 
 ---
 

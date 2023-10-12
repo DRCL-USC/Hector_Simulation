@@ -616,13 +616,13 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     }
 
     // double Q[12] = {100, 100, 100,   450, 450, 2*5000,   1, 1, 10,   100, 10, 100}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
-    // double Q[12] = {70, 70, 0,  200, 200, 700,  10, 10, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
-     double Q[12] = {1000, 1000, 1000,   1000, 1000, 5000,   1, 1, 1,   1, 1, 1};
+    double Q[12] = {70, 70, 0,  200, 100, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
+    //  double Q[12] = {1000, 1000, 1000,   1000, 1000, 5000,   1, 1, 1,   1, 1, 1};
     // double Q[12] = {3.5*1000, 3.5*1000, 1000,   1000, 1000, 0.25*10000,   1000, 2*1000, 1000,   1000, 1000, 3*1000};
     //double Q[12] = {2000, 2000, 10, 35, 35, 35, 1, 1, 1, 1, 1, 1};
 
     // double Alpha[12] = {1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,   5e-3, 5e-3, 5e-3, 5e-3, 5e-3, 5e-3};
-    double Alpha[12] = {1e-4, 1e-4, 5e-4, 1e-4, 1e-4, 5e-4,   2e-2, 2e-2, 2e-2, 2e-2, 2e-2, 2e-2};
+    double Alpha[12] = {1e-4, 1e-4, 5e-4, 1e-4, 1e-4, 5e-4,   1e-2, 1e-2, 1e-2, 1e-2, 1e-2, 1e-2};
     // double Alpha[12] = {1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6,   1e-5, 1e-5, 1e-5, 1e-5, 1e-5, 1e-5};
 
     double *weights = Q;
@@ -695,8 +695,8 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
                               seResult.rpy[2]*0,    // 2
-                              xStart,                                   // 3
-                              yStart,                                   // 4
+                              xStart*0,                                   // 3
+                              yStart*0,                                   // 4
                               0.55 ,   // 5
                               0,                                        // 6
                               0,                                        // 7

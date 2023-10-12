@@ -583,14 +583,15 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
       U_b(3 + 26*i) = BIG_NUMBER;
 
       U_b(4 + 26*i) = 0.01;
-      U_b(5 + 26*i) = BIG_NUMBER;      
-      U_b(6 + 26*i) = BIG_NUMBER;
 
+      U_b(5 + 26*i) = motorTorqueLimit;
+      U_b(6 + 26*i) = motorTorqueLimit;
       U_b(7 + 26*i) = motorTorqueLimit;
-      U_b(8 + 26*i) = motorTorqueLimit;
+      U_b(8 + 26*i) = motorTorqueLimit;      
       U_b(9 + 26*i) = motorTorqueLimit;
-      U_b(10 + 26*i) = motorTorqueLimit;      
-      U_b(11 + 26*i) = motorTorqueLimit;
+
+      U_b(10 + 26*i) = BIG_NUMBER;      
+      U_b(11 + 26*i) = BIG_NUMBER;
 
       U_b(12 + 26*i) = setup->f_max * update->gait[2*i + 0] ;
       // 
@@ -600,14 +601,15 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
       U_b(16 + 26*i) = BIG_NUMBER;
       
       U_b(17 + 26*i) = 0.01;
-      U_b(18 + 26*i) = BIG_NUMBER;      
-      U_b(19 + 26*i) = BIG_NUMBER;
 
+      U_b(18 + 26*i) = motorTorqueLimit;
+      U_b(19 + 26*i) = motorTorqueLimit;
       U_b(20 + 26*i) = motorTorqueLimit;
-      U_b(21 + 26*i) = motorTorqueLimit;
+      U_b(21 + 26*i) = motorTorqueLimit;      
       U_b(22 + 26*i) = motorTorqueLimit;
-      U_b(23 + 26*i) = motorTorqueLimit;      
-      U_b(24 + 26*i) = motorTorqueLimit;
+
+      U_b(23 + 26*i) = BIG_NUMBER;      
+      U_b(24 + 26*i) = BIG_NUMBER;
 
       U_b(25 + 26*i) = setup->f_max * update->gait[2*i + 1];
   }
@@ -673,7 +675,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   lh_vec << 0, 0, lh;
 
   Matrix<fpt,1,3> M_vec;
-  M_vec << 1.0, 0, 0;
+  M_vec << 0, 1.0, 0;
   Matrix<fpt,1,3> M_3D;
 
   Matrix<fpt,1,3> Moment_selection(1.f, 0, 0);
@@ -691,14 +693,14 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
       << 0,  mu, 1.f,  0, 0, 0, 0, 0, 0, 0, 0, 0;        
   F_control.block<1, 12>(4, 0) //Mx Leg 1
       << 0, 0, 0, 0, 0, 0, Moment_selection * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
-  F_control.block<5, 3>(5, 0) 
-      << Jv_L.transpose() * rs.R.transpose();
-  F_control.block<5, 3>(5, 6) 
-      << Jw_L.transpose() * rs.R.transpose();    
+  // F_control.block<5, 3>(5, 0) 
+  //     << Jv_L.transpose() * rs.R.transpose();
+  // F_control.block<5, 3>(5, 6) 
+  //     << Jw_L.transpose() * rs.R.transpose();    
   F_control.block<1, 12>(10, 0) //Line Leg 1
-      << lt_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0,  M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
+      << -lt_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0,  M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
   F_control.block<1, 12>(11, 0)
-      <<  lh_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0, -M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
+      <<  -lh_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0, -M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
   F_control.block<1, 12>(12, 0) //Fz Leg 1
       << 0, 0, 2.f, 0, 0, 0,   0, 0, 0, 0, 0, 0;
 
@@ -715,14 +717,14 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
       <<   0, 0, 0, 0, mu, 1.f, 0, 0, 0, 0, 0, 0;        
   F_control.block<1, 12>(17, 0) //Mx Leg 1
       << 0, 0, 0, 0, 0, 0, 0, 0, 0, Moment_selection * R_foot_R.transpose()* rs.R.transpose();
-  F_control.block<5, 3>(5, 3) 
-      << Jv_R.transpose() * rs.R.transpose();
-  F_control.block<5, 3>(5, 9) 
-      << Jw_R.transpose() * rs.R.transpose();  
+  // F_control.block<5, 3>(5, 3) 
+  //     << Jv_R.transpose() * rs.R.transpose();
+  // F_control.block<5, 3>(5, 9) 
+  //     << Jw_R.transpose() * rs.R.transpose();  
   F_control.block<1, 12>(23, 0) //Line Leg 2
-      << 0, 0, 0,     M_vec * R_foot_R.transpose()* rs.R.transpose(), 0, 0, 0,    lt_vec * R_foot_R.transpose()* rs.R.transpose();
+      << 0, 0, 0,     -lt_vec * R_foot_R.transpose()* rs.R.transpose(), 0, 0, 0,    M_vec * R_foot_R.transpose()* rs.R.transpose();
   F_control.block<1, 12>(24, 0)
-      << 0, 0, 0,    -M_vec * R_foot_R.transpose()* rs.R.transpose(),  0, 0, 0,   lh_vec * R_foot_R.transpose()* rs.R.transpose();  
+      << 0, 0, 0,    -lh_vec * R_foot_R.transpose()* rs.R.transpose(),  0, 0, 0,   M_vec * R_foot_R.transpose()* rs.R.transpose();  
   F_control.block<1, 12>(25, 0)  //Fz Leg 2
       << 0, 0, 0, 0, 0, 2.f, 0, 0, 0, 0, 0, 0;
 

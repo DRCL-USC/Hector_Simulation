@@ -1,4 +1,4 @@
-# Hector Open-source Simulation Software in MATLAB/Simulink
+# Hector Open-source Simulation Software in ROS
 
 ## HECTOR: Humanoid for Enhanced ConTrol and Open-source Research
 

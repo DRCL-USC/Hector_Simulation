@@ -89,7 +89,8 @@ SOFTWARE.
         LegControllerCommand commands[2];
         LegControllerData data[2];
         bool _legsEnabled = false;
- 
+        std::string limbName[5] = {"Hip 1", "Hip 2", "Thigh", "Knee ", "Toe  "};
+        std::string Side[2] = {"Left ", "Right"};        
         Biped& _biped;
     };
 

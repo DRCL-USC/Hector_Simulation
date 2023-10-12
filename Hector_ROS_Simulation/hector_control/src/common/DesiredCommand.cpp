@@ -22,7 +22,6 @@ void DesiredStateCommand::setStateCommands(double r, double p, Vec3<double> v_de
 
     data.stateDes(0) = stateEstimate->position(0) + dt * data.stateDes(6);
     data.stateDes(1) = stateEstimate->position(1) + dt * data.stateDes(7);
-    //data.stateDes(5) = stateEstimate->rpy(2) + dt * data.stateDes(11);
     data.stateDes(5) = data.pre_stateDes(5) + dt * data.stateDes(11);
 
     if(data.stateDes(5) > 3.1 && stateEstimate->rpy(2) < 0){

@@ -93,7 +93,7 @@ void LegController::updateCommand(LowlevelCmd* cmd){
             cmd->motorCmd[i*5+j].dq = commands[i].qdDes(j);
             cmd->motorCmd[i*5+j].Kp = commands[i].kpJoint(j,j);
             cmd->motorCmd[i*5+j].Kd = commands[i].kdJoint(j,j);
-            std::cout << "motor torque cmd " << i*5+j << ": "<< cmd->motorCmd[i*5+j].tau << std::endl;
+            std::cout << Side[i] << " " << limbName[j] <<" torque cmd  =  " << cmd->motorCmd[i*5+j].tau << std::endl;            
         }
 
         commands[i].tau << 0, 0, 0, 0, 0; // zero torque command to prevent interference

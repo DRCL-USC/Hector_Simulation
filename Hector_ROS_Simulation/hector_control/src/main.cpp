@@ -62,13 +62,14 @@ int main(int argc, char ** argv)
     FSM* _FSMController = new FSM(_controlData);
 
     signal(SIGINT, ShutDown);
-
+    
     while(running)
     {
         _FSMController->run();
         rate.sleep();
     }
-
+    
+    system("stty sane");  //Terminal back to normal
     delete _controlData;
     return 0;
 

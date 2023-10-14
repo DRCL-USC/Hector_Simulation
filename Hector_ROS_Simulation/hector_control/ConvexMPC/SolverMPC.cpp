@@ -546,21 +546,18 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   for (int i = 0; i < num_constraints; i++)
   {
     if (!(near_zero(lb_qpoases[i]) && near_zero(ub_qpoases[i]))) continue;
-      // printf("check 1\n");
-      // std::cout<< i << std::endl;
+
       
     double *c_row = &A_qpoases[i * num_variables];
-    // std::cout << "c_row: " << std::endl;
+
     for (int j = 0; j < num_variables; j++)
     {
       
-      // std::cout << c_row[j] << std::endl;
       if (near_one(c_row[j]))
       {
           new_vars -= 6;
           new_cons -= 13;
-          // // int cs = ((j)*13)/6 + 6;//j+2*i;//(j*7)/6 -6;
-          // int cs = ceil((j+4)/6)*13-1;
+
           int cs;
           if (j%2 == 0){
             cs = (j+4)/6*13-1;
@@ -569,9 +566,6 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
             cs = (j+1)/6*13+12;
           }
 
-          // var_elim[j-8] = 1;
-          // var_elim[j-7] = 1;
-          // var_elim[j-6] = 1;
           var_elim[j+6] = 1;
           var_elim[j+5] = 1;
           var_elim[j+4] = 1;
@@ -596,12 +590,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
     }
   }
   
-  std::cout << "newvars" << new_vars << std::endl;
-  std::cout << "newcons" << new_cons << std::endl;
-  // std::cout << "var_elim" << var_elim << std::endl;
-  // std::cout << "con_elim" << con_elim << std::endl;
 
-  // if(new_vars != num_variables)
   if (1 == 1)
   {
     int var_ind[new_vars];

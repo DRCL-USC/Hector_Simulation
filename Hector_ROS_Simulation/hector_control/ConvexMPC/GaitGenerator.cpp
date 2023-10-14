@@ -1,6 +1,6 @@
 #include "GaitGenerator.h"
 
-// ====================== GAIT Class Implementation =======================
+// ====================== GAIT Class Implementation ======================= //
 
 // Constructor: Initializes gait parameters using provided values.
 Gait::Gait(int nMPC_segments, Vec2<int> offsets, Vec2<int> durations, const std::string &name) : _offsets(offsets.array()), 
@@ -14,10 +14,16 @@ Gait::Gait(int nMPC_segments, Vec2<int> offsets, Vec2<int> durations, const std:
   _swing = nMPC_segments - durations[0]; 
 }
 
+/******************************************************************************************************/
+/******************************************************************************************************/
+
 Gait::~Gait()
 {
   delete[] _mpc_table;
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
 
 // Compute and return the current subphase of contact.
 Vec2<double> Gait::getContactSubPhase()
@@ -40,6 +46,9 @@ Vec2<double> Gait::getContactSubPhase()
 
   return progress.matrix();
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
 
 // Compute and return the current subphase of swing.
 Vec2<double> Gait::getSwingSubPhase()
@@ -69,6 +78,9 @@ Vec2<double> Gait::getSwingSubPhase()
   return progress.matrix();
 }
 
+/******************************************************************************************************/
+/******************************************************************************************************/
+
 // Generate and return the MPC gait table.
 int *Gait::mpc_gait()
 {
@@ -89,6 +101,9 @@ int *Gait::mpc_gait()
 
   return _mpc_table;
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
 
 // Update iteration and phase based on the given values.
 void Gait::setIterations(int iterationsPerMPC, int currentIteration)

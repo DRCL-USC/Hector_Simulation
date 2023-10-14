@@ -23,14 +23,15 @@ ConvexMPCLocomotion::ConvexMPCLocomotion(double _dt, int _iterations_between_mpc
 {
   gaitNumber = 7;
   dtMPC = dt * iterationsBetweenMPC;
-  // dtMPC = 0.03;
-  // std::cout << "dtMPC: " << dtMPC << std::endl;
   rpy_int[2] = 0;
   for (int i = 0; i < 2; i++)
     firstSwing[i] = true;
 
   foot_position.open("foot_pos.txt");
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
 
 void ConvexMPCLocomotion::run(ControlFSMData &data)
 {
@@ -180,7 +181,6 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
 
   // calc gait
   gait->setIterations(iterationsBetweenMPC, iterationCounter); 
-  std::cout<< "iteration_counter; "<< iterationCounter << std::endl;
 
   // load LCM leg swing gains
   Kp << 300, 0, 0,
@@ -277,6 +277,9 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
   }
 }
 
+/******************************************************************************************************/
+/******************************************************************************************************/
+
 void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data, bool omniMode)
 {
 
@@ -318,16 +321,6 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
       q(i) = fmod(q(i) , PI2);
     }
 
-    Eigen::Matrix<float, 3, 3> R_foot_L;
-    Eigen::Matrix<float, 3, 3> R_foot_R;
-    R_foot_L << - 1.0*sin(q(4))*(cos(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) + sin(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))) - cos(q(4))*(1.0*sin(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) - cos(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))), -1.0*cos(q(1))*sin(q(0)), cos(q(4))*(cos(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) + sin(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))) - sin(q(4))*(1.0*sin(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) - cos(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))),
-              cos(q(4))*(cos(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) - 1.0*sin(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))) - 1.0*sin(q(4))*(sin(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) + cos(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))),      cos(q(0))*cos(q(1)), cos(q(4))*(sin(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) + cos(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))) + sin(q(4))*(cos(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) - 1.0*sin(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))),
-                                                                                                                                                                                                                            -1.0*sin(q(2) + q(3) + q(4))*cos(q(1)),              sin(q(1)),                                                                                                                                                                                                                             cos(q(2) + q(3) + q(4))*cos(q(1));
-    R_foot_R << - 1.0*sin(q(9))*(cos(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) + sin(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))) - cos(q(9))*(1.0*sin(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) - cos(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))), -1.0*cos(q(6))*sin(q(5)), cos(q(9))*(cos(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) + sin(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))) - sin(q(9))*(1.0*sin(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) - cos(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))),
-              cos(q(9))*(cos(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) - 1.0*sin(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))) - 1.0*sin(q(9))*(sin(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) + cos(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))),      cos(q(5))*cos(q(6)), cos(q(9))*(sin(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) + cos(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))) + sin(q(9))*(cos(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) - 1.0*sin(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))),
-                                                                                                                                                                                                                            -1.0*sin(q(7) + q(8) + q(9))*cos(q(6)),              sin(q(6)),                                                                                                                                                                                                                             cos(q(7) + q(8) + q(9))*cos(q(6));
-
-
     double r[6];
     for (int i = 0; i < 6; i++)
     {
@@ -345,7 +338,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     std::cout << "current position: " << p[0] << "  "<< p[1] << "  "<< p[2] << std::endl;
 
 
-    Vec3<double> v_des_robot(stateCommand->data.stateDes[6], stateCommand->data.stateDes[7], 0);
+    v_des_robot << stateCommand->data.stateDes[6], stateCommand->data.stateDes[7], 0;
 
     Vec3<double> v_des_world = seResult.rBody.transpose() * v_des_robot;
     const double max_pos_error = .15;
@@ -360,6 +353,9 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
 
     world_position_desired[0] = xStart;
     world_position_desired[1] = yStart;
+
+    // Vec3<double> ori_des_world;
+    ori_des_world << stateCommand->data.stateDes[3], stateCommand->data.stateDes[4], stateCommand->data.stateDes[5];    
 
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
@@ -418,14 +414,17 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
 
     }
 
-    Timer t1;
-    t1.start();
+    //MPC Solver Setup
     dtMPC = dt * iterationsBetweenMPC;
     setup_problem(dtMPC, horizonLength, 0.25, 500);
-    Timer t2;
-    t2.start();
+    
+    //Solve MPC
+    Timer t_mpc_solve;
+    t_mpc_solve.start();
     update_problem_data(p, v, quat, w, r, joint_angles ,yaw, weights, trajAll, Alpha_K, mpcTable);
-    printf("MPC Solve time %f ms\n", t2.getMs());
+    printf("MPC Solve time %f ms\n", t_mpc_solve.getMs());
+
+    //Get solution and update foot forces    
     for (int leg = 0; leg < 2; leg++)
     {
       Vec3<double> GRF;
@@ -450,3 +449,81 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     }
   }
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+
+  // void ConvexMPCLocomotion::GenerateTrajectory(int* mpcTable, ControlFSMData& data, bool omniMode, StateEstimate& _seResult){
+    
+  //   Vec3<double> v_des_world = _seResult.rBody.transpose() * v_des_robot;
+  //   const double max_pos_error = .15;
+  //   double xStart = world_position_desired[0];
+  //   double yStart = world_position_desired[1];
+
+  //   if(xStart - p[0] > max_pos_error) xStart = p[0] + max_pos_error;
+  //   if(p[0] - xStart > max_pos_error) xStart = p[0] - max_pos_error;
+
+  //   if(yStart - p[1] > max_pos_error) yStart = p[1] + max_pos_error;
+  //   if(p[1] - yStart > max_pos_error) yStart = p[1] - max_pos_error;
+
+  //   world_position_desired[0] = xStart;
+  //   world_position_desired[1] = yStart;
+
+  //   double trajInitial[12] = {ori_des_world[0],  // 0
+  //                             ori_des_world[1],    // 1
+  //                             0,    // 2
+  //                             0,                                   // 3
+  //                             0,                                   // 4
+  //                             0.5 ,   // 5
+  //                             0,                                        // 6
+  //                             0,                                        // 7
+  //                             stateCommand->data.stateDes[11],  // 8
+  //                             v_des_world[0],                           // 9
+  //                             v_des_world[1],                           // 10
+  //                             0};                                       // 11
+
+  //   for (int i = 0; i < horizonLength; i++)
+  //   {
+  //     for (int j = 0; j < 12; j++)
+  //       trajAll[12 * i + j] = trajInitial[j];
+
+  //     if(i == 0) // start at current position  TODO consider not doing this
+  //     {
+  //       trajAll[0] = seResult.rpy[0];
+  //       trajAll[1] = seResult.rpy[1];
+  //       trajAll[2] = seResult.rpy[2];
+  //       trajAll[3] = seResult.position[0];
+  //       trajAll[4] = seResult.position[1];
+  //       trajAll[5] = seResult.position[2];
+  //     }
+  //     else
+  //     {
+  //       if (v_des_world[0] == 0) {
+  //       trajAll[12*i + 3] = trajInitial[3] + i * dtMPC * v_des_world[0];
+  //       }
+  //       else{
+  //        trajAll[12*i + 3] = seResult.position[0] + i * dtMPC * v_des_world[0]; 
+  //       }
+  //       if (v_des_world[1] == 0) {
+  //       trajAll[12*i + 4] = trajInitial[4] + i * dtMPC * v_des_world[1];
+  //       }
+  //       else{
+  //        trajAll[12*i + 4] = seResult.position[1] + i * dtMPC * v_des_world[1]; 
+  //       }
+  //       if (stateCommand->data.stateDes[11] == 0){
+  //       trajAll[12*i + 4] = trajInitial[4];
+  //        }
+  //       else{
+  //       trajAll[12*i + 2] = yaw + i * dtMPC * stateCommand->data.stateDes[11];
+  //       //std::cout << "yaw traj" <<  trajAll[12*i + 2] << std::endl;
+  //       }
+  //     }
+  //     std::cout << "traj " << i << std::endl;
+  //     for (int j = 0; j < 12; j++) {
+  //       std::cout << trajAll[12 * i + j] << "  ";
+  //     }
+  //         std::cout<< " " <<std::endl;
+
+  //   }
+
+  // }

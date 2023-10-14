@@ -108,9 +108,6 @@
 
         </model>
 
-        <!-- <include>
-            <uri>model:///home/mohsen/Dropbox/new_codebase_simulation/src/Quadruped_ROS_Simulation_v2/unitree_ros/unitree_gazebo/worlds/building_editor_models/stairs</uri>
-        </include> -->
 
         <model name='stairs'>
     <pose frame=''>3.7 0.009 0 0 -0 0</pose>

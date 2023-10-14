@@ -7,6 +7,7 @@
 #include "convexMPC_interface.h"
 #include <iostream>
 #include <stdio.h>
+#include "Constraints.h"
 
 using Eigen::Matrix;
 using Eigen::Quaternionf;

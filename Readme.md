@@ -55,6 +55,7 @@ The robot should be standing on the ground
 * In a new terminal: `rosrun hector_control hector_ctrl`
 
 * Click the start button at the bottom of the simulator, the robot should stand up/move away
+* In some occasions the controller does not kick in after starting, please terminate the controller with ctrl + \\. Then go back to the simulator, pause, and reset (ctrl + R). Rerun controller. 
 
 
 ## Cite Us:

@@ -51,5 +51,5 @@ Thank you for choosing our software for your research and development, we highly
 Junheng Li -- junhengl@usc.edu
 
 ## License 
-Please read the License.md for details. 
+Both Hector simulation and controller code follow the 3-Clause BSD License. Please read the License.md for details. 
 

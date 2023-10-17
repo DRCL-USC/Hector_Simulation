@@ -9,8 +9,15 @@ This branch contains the ROS+Gazebo simulation for the Hector humanoid robot.
 Introduction Video: https://youtu.be/NcW-NFwjMh0
 
 ## Dependencies:
-1. 
-
+* [Boost](http://www.boost.org) (version 1.5.4 or higher)
+* [CMake](http://www.cmake.org) (version 2.8.3 or higher)
+* [LCM](https://lcm-proj.github.io) (version 1.4.0 or higher)
+* [ROS](http://wiki.ros.org/) Neotic
+* [Gazebo](https://gazebosim.org/home) 11
+* [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page) (>3.3)
+* unitree_legged_sdk 
+* [qpOASES](https://github.com/coin-or/qpOASES)
+* ROS_Packages
 
 ## System Requirements:
 If you want to simulate with [Gazebo](http://gazebosim.org/), we recommend **x86 platform**. **ARM platform** is not suggested for simulation. So, if you run this code on ARM platform, please remove *Simulation related* folder first.
@@ -18,10 +25,6 @@ If you want to simulate with [Gazebo](http://gazebosim.org/), we recommend **x86
 The current system environment is: 
 
 * Ubuntu 20.04 + ROS Noetic* (recommended, tested stable) 
-
-
-## Installation:
-+ 
 
 
 ## Configuration:
@@ -79,4 +82,7 @@ Junheng Li -- junhengl@usc.edu
 
 ## License 
 Please read the License.md for details. 
+
+## Acknowledgement：
+
 

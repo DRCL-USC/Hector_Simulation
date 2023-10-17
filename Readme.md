@@ -50,6 +50,9 @@ Thank you for choosing our software for your research and development, we highly
 ## Contact Information:
 Junheng Li -- junhengl@usc.edu
 
-## License 
+## License：
 Both Hector simulation and controller code follow the 3-Clause BSD License. Please read the License.md for details. 
+
+## Acknowledgment:
+The authors would like to thank Zhanhao Le and Han Gong for contributing to the Matlab/Simulink open-source software.
 

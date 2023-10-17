@@ -19,7 +19,7 @@ Introduction Video: https://youtu.be/NcW-NFwjMh0
 * [qpOASES](https://github.com/coin-or/qpOASES)
 * ROS_Packages
 ```
-sudo apt-get install ros-noetic-grid-map ros-noetic-rtabmap-ros ros-noetic-controller-manager ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-velocity-controllers ros-noetic-position-controllers ros-noetic-robot-controllers ros-noetic-robot-state-publisher ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control
+sudo apt-get install ros-noetic-controller-manager ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-velocity-controllers ros-noetic-position-controllers ros-noetic-robot-controllers ros-noetic-robot-state-publisher ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control
 ```
 
 ## System Requirements:

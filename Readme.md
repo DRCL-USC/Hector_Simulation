@@ -18,6 +18,9 @@ Introduction Video: https://youtu.be/NcW-NFwjMh0
 * unitree_legged_sdk 
 * [qpOASES](https://github.com/coin-or/qpOASES)
 * ROS_Packages
+```
+sudo apt-get install ros-noetic-grid-map ros-noetic-rtabmap-ros ros-noetic-controller-manager ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-velocity-controllers ros-noetic-position-controllers ros-noetic-robot-controllers ros-noetic-robot-state-publisher ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control
+```
 
 ## System Requirements:
 If you want to simulate with [Gazebo](http://gazebosim.org/), we recommend **x86 platform**. **ARM platform** is not suggested for simulation. So, if you run this code on ARM platform, please remove *Simulation related* folder first.

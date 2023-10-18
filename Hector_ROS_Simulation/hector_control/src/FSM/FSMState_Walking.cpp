@@ -34,7 +34,7 @@ void FSMState_Walking::run()
     // std::cout << "vx vy " << v_des_body[0] << " " << v_des_body[1] << std::endl;
     _data->_desiredStateCommand->setStateCommands(roll, pitch, v_des_body, turn_rate);
     
-    Cmpc.setGaitNum(3); 
+    Cmpc.setGaitNum(2); // 2 for walking
     Cmpc.run(*_data);
 
     _data->_legController->updateCommand(_data->_lowCmd);  

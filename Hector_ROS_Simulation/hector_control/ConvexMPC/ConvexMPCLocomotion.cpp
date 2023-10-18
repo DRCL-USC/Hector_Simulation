@@ -13,12 +13,7 @@ ConvexMPCLocomotion::ConvexMPCLocomotion(double _dt, int _iterations_between_mpc
  iterationsBetweenMPC(_iterations_between_mpc),
  horizonLength(10),
  dt(_dt),
- galloping(horizonLength, Vec2<int>(0, 2), Vec2<int>(5, 5), "Galloping"),
- pronking(horizonLength, Vec2<int>(0, 0), Vec2<int>(4, 4), "Pronking"),
- trotting(horizonLength, Vec2<int>(0, 5), Vec2<int>(5, 5), "Trotting"),
- bounding(horizonLength, Vec2<int>(0, 0), Vec2<int>(9, 9), "Bounding"),
  walking(horizonLength, Vec2<int>(0, 5), Vec2<int>(5, 5), "Walking"),
- pacing(horizonLength, Vec2<int>(0, 9), Vec2<int>(5, 5), "Pacing"),
  standing(horizonLength, Vec2<int>(0, 0), Vec2<int>(10, 10), "Standing")
 {
   gaitNumber = 7;
@@ -41,21 +36,12 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
   auto &stateCommand = data._desiredStateCommand;
 
   // pick gait
-  Gait *gait = &trotting;
+  Gait *gait = &standing;
   if (gaitNumber == 1)
-    gait = &bounding;
-  else if (gaitNumber == 2)
-    gait = &trotting;
-  else if (gaitNumber == 3)
-    gait = &walking;
-  else if (gaitNumber == 4)
-    gait = &pacing;
-  else if (gaitNumber == 5)
-    gait = &galloping;
-  else if (gaitNumber == 6)
-    gait = &pronking;
-  else if (gaitNumber == 7)
     gait = &standing;
+  else if (gaitNumber == 2)
+    gait = &walking;
+
   current_gait = gaitNumber;
   // integrate position setpoint
   Vec3<double> v_des_robot(stateCommand->data.stateDes[6], stateCommand->data.stateDes[7],0);

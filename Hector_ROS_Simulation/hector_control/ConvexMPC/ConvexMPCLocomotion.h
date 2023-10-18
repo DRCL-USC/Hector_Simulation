@@ -40,7 +40,7 @@ public:
   
     // Main Functionalities
     void run(ControlFSMData& data);
-    void setGaitNum(int gaitNum) { gaitNumber = gaitNum % 7; if(gaitNum%7 == 0) gaitNumber = 7; return; }
+    void setGaitNum(int gaitNum) { gaitNumber = gaitNum; }
     bool firstRun = true;
 
 
@@ -58,7 +58,7 @@ private:
     Vec12<double> Forces_Sol;
     Vec2<double> swingTimes;
     FootSwingTrajectory<double> footSwingTrajectories[2];
-    Gait trotting, bounding, pacing, walking, galloping, pronking, standing;
+    Gait walking, standing;
 
     // Feedback and Control Variables
     Mat3<double> Kp, Kd, Kp_stance, Kd_stance;

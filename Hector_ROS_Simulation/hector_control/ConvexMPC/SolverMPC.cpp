@@ -42,7 +42,7 @@ Matrix<fpt, 1, 3> tx_F;
 Matrix<fpt, 1, 3> ty_F;
 Matrix<fpt, 1, 3> DNFG;
 
-// Matrix<fpt,Dynamic,Dynamic> eye_12h;
+Matrix<fpt, Dynamic, Dynamic> gait_t;
 Matrix<fpt, Dynamic, Dynamic> Alpha_diag;
 Matrix<fpt, Dynamic, Dynamic> Alpha_rep;
 
@@ -233,9 +233,6 @@ void resize_qp_mats(s16 horizon)
   qg.resize(12 * horizon, Eigen::NoChange);
   mcount += 12 * horizon;
 
-  // eye_12h.resize(12*horizon, 12*horizon);
-  // mcount += 12*12*horizon;
-
   Alpha_rep.resize(12 * horizon, 12 * horizon);
   mcount += 12 * 12 * horizon;
 
@@ -250,7 +247,6 @@ void resize_qp_mats(s16 horizon)
   L_b.setZero();
   fmat.setZero();
   qH.setZero();
-  // eye_12h.setIdentity();
   Alpha_rep.setZero();
 
   // TODO: use realloc instead of free/malloc on size changes
@@ -485,15 +481,13 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
 
   double motorTorqueLimit = 33.5;
 
-  int horizonn = setup->horizon;
-  Eigen::MatrixXf gaitt;
-  gaitt.resize(2*horizonn, 1);
-  for(int i = 0; i < 2*horizonn; i++){
-    gaitt(i,0) = update->gait[i];
+  gait_t.resize(2*setup->horizon, 1);
+  for(int i = 0; i < 2*setup->horizon; i++){
+    gait_t(i,0) = update->gait[i];
   }
 
   //Constraint Calculation
-  Constraints constraints(rs, q, setup->horizon, NUM_CON, motorTorqueLimit, BIG_NUMBER, setup->f_max, gaitt);
+  Constraints constraints(rs, q, setup->horizon, NUM_CON, motorTorqueLimit, BIG_NUMBER, setup->f_max, gait_t);
   U_b = constraints.GetUpperBound();
   L_b = constraints.GetLowerBound();
 
@@ -654,10 +648,8 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
     qpOASES::QProblem problem_red(new_vars, new_cons);
     qpOASES::Options op;
     op.setToMPC();
-    // op.setToMPC();
     op.printLevel = qpOASES::PL_NONE;
     problem_red.setOptions(op);
-    // int_t nWSR = 50000;
 
     // QP initialized
 

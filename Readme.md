@@ -9,8 +9,18 @@ This branch contains the ROS+Gazebo simulation for the Hector humanoid robot.
 Introduction Video: https://youtu.be/NcW-NFwjMh0
 
 ## Dependencies:
-1. 
-
+* [Boost](http://www.boost.org) (version 1.5.4 or higher)
+* [CMake](http://www.cmake.org) (version 2.8.3 or higher)
+* [LCM](https://lcm-proj.github.io) (version 1.4.0 or higher)
+* [ROS](http://wiki.ros.org/) Neotic
+* [Gazebo](https://gazebosim.org/home) 11
+* [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page) (>3.3)
+* unitree_legged_sdk 
+* [qpOASES](https://github.com/coin-or/qpOASES)
+* ROS_Packages
+```
+sudo apt-get install ros-noetic-controller-manager ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-velocity-controllers ros-noetic-position-controllers ros-noetic-robot-controllers ros-noetic-robot-state-publisher ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control
+```
 
 ## System Requirements:
 If you want to simulate with [Gazebo](http://gazebosim.org/), we recommend **x86 platform**. **ARM platform** is not suggested for simulation. So, if you run this code on ARM platform, please remove *Simulation related* folder first.
@@ -18,10 +28,6 @@ If you want to simulate with [Gazebo](http://gazebosim.org/), we recommend **x86
 The current system environment is: 
 
 * Ubuntu 20.04 + ROS Noetic* (recommended, tested stable) 
-
-
-## Installation:
-+ 
 
 
 ## Configuration:
@@ -55,6 +61,7 @@ The robot should be standing on the ground
 * In a new terminal: `rosrun hector_control hector_ctrl`
 
 * Click the start button at the bottom of the simulator, the robot should stand up/move away
+* In some occasions the controller does not kick in after starting, please terminate the controller with ctrl + \\. Then go back to the simulator, pause, and reset (ctrl + R). Rerun controller. 
 
 
 ## Cite Us:
@@ -78,4 +85,7 @@ Junheng Li -- junhengl@usc.edu
 
 ## License 
 Please read the License.md for details. 
+
+## Acknowledgement：
+
 

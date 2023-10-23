@@ -83,14 +83,14 @@
         <mu2>1</mu2>
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
-        <material>Gazebo/DarkGrey</material>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="L_hip2">
         <mu1>1</mu1>
         <mu2>1</mu2>
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
-        <material>Gazebo/Red</material>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="L_thigh">
         <mu1>1</mu1>
@@ -98,7 +98,7 @@
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
-        <material>Gazebo/DarkGrey</material>
+        <material>Gazebo/Grey</material>
         
     </gazebo>
     <gazebo reference="L_calf">
@@ -107,6 +107,7 @@
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="L_toe">
         <mu1>3</mu1>
@@ -114,7 +115,7 @@
         <kp  value="1000000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
-        <material>Gazebo/DarkGrey</material>
+        <material>Gazebo/Grey</material>
         
     </gazebo>
 
@@ -124,14 +125,14 @@
         <mu2>1</mu2>
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
-        <material>Gazebo/DarkGrey</material>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="R_hip2">
         <mu1>1</mu1>
         <mu2>1</mu2>
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
-        <material>Gazebo/Red</material>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="R_thigh">
         <mu1>1</mu1>
@@ -139,7 +140,7 @@
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
-        <material>Gazebo/DarkGrey</material> 
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="R_calf">
         <mu1>1</mu1>
@@ -147,6 +148,7 @@
         <kp  value="100000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
+        <material>Gazebo/Grey</material>
     </gazebo>
     <gazebo reference="R_toe">
         <mu1>3</mu1>
@@ -154,7 +156,7 @@
         <kp  value="1000000.0"/>
         <kd  value="1000.0"/>
         <self_collide>0</self_collide>
-        <material>Gazebo/DarkGrey</material>
+        <material>Gazebo/Grey</material>
         
     </gazebo>
 

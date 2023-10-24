@@ -11,7 +11,7 @@ Constraints::Constraints(RobotState& rs, const Eigen::MatrixXf& jointAngles, int
     A_c = Eigen::MatrixXf::Zero(Num_Constraints, Num_Variables);
 
     CalculateUpperBound();
-    CalculateLowerBound();
+    // CalculateLowerBound();
     CalculateFootRotationMatrix();
     CalculateConstarintMatrix();
     
@@ -21,44 +21,61 @@ Constraints::Constraints(RobotState& rs, const Eigen::MatrixXf& jointAngles, int
 /******************************************************************************************************/
 //Calculates upper bound for the QP
 void Constraints::CalculateUpperBound() {
-  
-  for(s16 i = 0; i < horizon_; i++){
-      U_b(0 + Num_Constraints*i) = BIG_NUMBER_;
-      U_b(1 + Num_Constraints*i) = BIG_NUMBER_;
-      U_b(2 + Num_Constraints*i) = BIG_NUMBER_;
-      U_b(3 + Num_Constraints*i) = BIG_NUMBER_;
 
-      U_b(4 + Num_Constraints*i) = 0.01;
+  for (s16 leg = 0; leg < 2; leg ++){
 
-      U_b(5 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(6 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(7 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(8 + Num_Constraints*i) = motorTorqueLimit_;      
-      U_b(9 + Num_Constraints*i) = motorTorqueLimit_;
+    for(s16 i = 0; i < horizon_; i++){
+      for (s16 j = 0; j < 4; j++){  // bound
+        U_b(8*leg + j + 16*i) = BIG_NUMBER_;
+        L_b(8*leg + j + 16*i) = 0.0f;
+      }
+        U_b(8*leg + 4 + 16*i) = 0.01f;
+        U_b(8*leg + 5 + 16*i) = 0.0f;
+        U_b(8*leg + 6 + 16*i) = 0.0f;
+        U_b(8*leg + 7 + 16*i) = f_max_ * gait_(2*i + 0);
+        L_b(8*leg + 4 + 16*i) = 0.0f;
+        L_b(8*leg + 5 + 16*i) = -BIG_NUMBER_;
+        L_b(8*leg + 6 + 16*i) = -BIG_NUMBER_;
+        L_b(8*leg + 7 + 16*i) = 0.0f ;
+    }
+  }  
+//   for(s16 i = 0; i < horizon_; i++){
+//       U_b(0 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(1 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(2 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(3 + Num_Constraints*i) = BIG_NUMBER_;
 
-      U_b(10 + Num_Constraints*i) = BIG_NUMBER_;      
-      U_b(11 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(4 + Num_Constraints*i) = 0.01;
 
-      U_b(12 + Num_Constraints*i) = f_max_ * gait_(2*i + 0) ;
-      // 
-      U_b(13 + Num_Constraints*i) = BIG_NUMBER_;
-      U_b(14+ Num_Constraints*i) = BIG_NUMBER_;
-      U_b(15 + Num_Constraints*i) = BIG_NUMBER_;
-      U_b(16 + Num_Constraints*i) = BIG_NUMBER_;
+//     //   U_b(5 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(6 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(7 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(8 + Num_Constraints*i) = motorTorqueLimit_;      
+//     //   U_b(9 + Num_Constraints*i) = motorTorqueLimit_;
+
+//       U_b(5 + Num_Constraints*i) = BIG_NUMBER_;      
+//       U_b(6 + Num_Constraints*i) = BIG_NUMBER_;
+
+//       U_b(7 + Num_Constraints*i) = f_max_ * gait_(2*i + 0) ;
+//       // 
+//       U_b(8 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(9+ Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(10 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(11 + Num_Constraints*i) = BIG_NUMBER_;
       
-      U_b(17 + Num_Constraints*i) = 0.01;
+//       U_b(12 + Num_Constraints*i) = 0.01;
 
-      U_b(18 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(19 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(20 + Num_Constraints*i) = motorTorqueLimit_;
-      U_b(21 + Num_Constraints*i) = motorTorqueLimit_;      
-      U_b(22 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(18 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(19 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(20 + Num_Constraints*i) = motorTorqueLimit_;
+//     //   U_b(21 + Num_Constraints*i) = motorTorqueLimit_;      
+//     //   U_b(22 + Num_Constraints*i) = motorTorqueLimit_;
 
-      U_b(23 + Num_Constraints*i) = BIG_NUMBER_;      
-      U_b(24 + Num_Constraints*i) = BIG_NUMBER_;
+//       U_b(13 + Num_Constraints*i) = BIG_NUMBER_;      
+//       U_b(14 + Num_Constraints*i) = BIG_NUMBER_;
 
-      U_b(25 + Num_Constraints*i) = f_max_ * gait_(2*i + 1);
-  }
+//       U_b(15 + Num_Constraints*i) = f_max_ * gait_(2*i + 1);
+//   }
 
 }
 
@@ -77,30 +94,30 @@ void Constraints::CalculateLowerBound() {
       L_b(5 + Num_Constraints*i) = 0.0f;      
       L_b(6 + Num_Constraints*i) = 0.0f;
 
-      L_b(7 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(8 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(9 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(10 + Num_Constraints*i) = -motorTorqueLimit_;      
-      L_b(11 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(7 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(8 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(9 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(10 + Num_Constraints*i) = -motorTorqueLimit_;      
+    //   L_b(11 + Num_Constraints*i) = -motorTorqueLimit_;
 
-      L_b(12 + Num_Constraints*i) = 0.0f ;
+      L_b(7 + Num_Constraints*i) = 0.0f ;
       // 
-      L_b(13 + Num_Constraints*i) = 0.0f;
-      L_b(14 + Num_Constraints*i) = 0.0f;
-      L_b(15 + Num_Constraints*i) = 0.0f;
-      L_b(16 + Num_Constraints*i) = 0.0f;
+      L_b(8 + Num_Constraints*i) = 0.0f;
+      L_b(9 + Num_Constraints*i) = 0.0f;
+      L_b(10 + Num_Constraints*i) = 0.0f;
+      L_b(11 + Num_Constraints*i) = 0.0f;
       
-      L_b(17 + Num_Constraints*i) = 0.0f;
-      L_b(18 + Num_Constraints*i) = 0.0f;      
-      L_b(19 + Num_Constraints*i) = 0.0f;
+      L_b(12 + Num_Constraints*i) = 0.0f;
+      L_b(13 + Num_Constraints*i) = 0.0f;      
+      L_b(14 + Num_Constraints*i) = 0.0f;
 
-      L_b(20 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(21 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(22 + Num_Constraints*i) = -motorTorqueLimit_;
-      L_b(23 + Num_Constraints*i) = -motorTorqueLimit_;      
-      L_b(24 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(20 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(21 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(22 + Num_Constraints*i) = -motorTorqueLimit_;
+    //   L_b(23 + Num_Constraints*i) = -motorTorqueLimit_;      
+    //   L_b(24 + Num_Constraints*i) = -motorTorqueLimit_;
 
-      L_b(25 + Num_Constraints*i) = 0.0f;
+      L_b(15 + Num_Constraints*i) = 0.0f;
   }    
 }
 
@@ -139,34 +156,34 @@ void Constraints::CalculateConstarintMatrix() {
   //     << Jv_L.transpose() * rs.R.transpose();
   // F_control.block<5, 3>(5, 6) 
   //     << Jw_L.transpose() * rs.R.transpose();    
-  A_c.block<1, 12>(10, 0) //Line Leg 1
+  A_c.block<1, 12>(5, 0) //Line Leg 1
       << -lt_vec * R_foot_L.transpose()* rs_.R.transpose(),   0, 0, 0,  M_vec * R_foot_L.transpose()* rs_.R.transpose(),  0, 0, 0;
-  A_c.block<1, 12>(11, 0)
+  A_c.block<1, 12>(6, 0)
       <<  -lh_vec * R_foot_L.transpose()* rs_.R.transpose(),   0, 0, 0, -M_vec * R_foot_L.transpose()* rs_.R.transpose(),  0, 0, 0;
-  A_c.block<1, 12>(12, 0) //Fz Leg 1
+  A_c.block<1, 12>(7, 0) //Fz Leg 1
       << 0, 0, 2.f, 0, 0, 0,   0, 0, 0, 0, 0, 0;
   
 
 //leg 2
-  A_c.block<1, 12>(13, 0) //Friction leg 2
+  A_c.block<1, 12>(8, 0) //Friction leg 2
       <<  0, 0, 0,   -mu, 0, 1.f, 0, 0, 0, 0, 0, 0;
-  A_c.block<1, 12>(14, 0)
+  A_c.block<1, 12>(9, 0)
       <<  0, 0, 0,    mu, 0, 1.f, 0, 0, 0, 0, 0, 0;
-  A_c.block<1, 12>(15, 0)
+  A_c.block<1, 12>(10, 0)
       <<   0, 0, 0, 0, -mu, 1.f, 0, 0, 0, 0, 0, 0;
-  A_c.block<1, 12>(16, 0)
+  A_c.block<1, 12>(11, 0)
       <<   0, 0, 0, 0, mu, 1.f, 0, 0, 0, 0, 0, 0;        
-  A_c.block<1, 12>(17, 0) //Mx Leg 1
+  A_c.block<1, 12>(12, 0) //Mx Leg 1
       << 0, 0, 0, 0, 0, 0, 0, 0, 0, Moment_selection * R_foot_R.transpose()* rs_.R.transpose();
   // F_control.block<5, 3>(5, 3) 
   //     << Jv_R.transpose() * rs.R.transpose();
   // F_control.block<5, 3>(5, 9) 
   //     << Jw_R.transpose() * rs.R.transpose();  
-  A_c.block<1, 12>(23, 0) //Line Leg 2
+  A_c.block<1, 12>(13, 0) //Line Leg 2
       << 0, 0, 0,     -lt_vec * R_foot_R.transpose()* rs_.R.transpose(), 0, 0, 0,    M_vec * R_foot_R.transpose()* rs_.R.transpose();
-  A_c.block<1, 12>(24, 0)
+  A_c.block<1, 12>(14, 0)
       << 0, 0, 0,    -lh_vec * R_foot_R.transpose()* rs_.R.transpose(),  0, 0, 0,   M_vec * R_foot_R.transpose()* rs_.R.transpose();  
-  A_c.block<1, 12>(25, 0)  //Fz Leg 2
+  A_c.block<1, 12>(15, 0)  //Fz Leg 2
       << 0, 0, 0, 0, 0, 2.f, 0, 0, 0, 0, 0, 0;
 }
 

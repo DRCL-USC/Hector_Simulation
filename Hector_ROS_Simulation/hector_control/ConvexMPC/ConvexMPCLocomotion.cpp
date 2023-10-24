@@ -313,7 +313,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
       r[i] = pFoot[i % 2][i / 2] - seResult.position[i / 2];
     }
     //MPC Weights
-    double Q[12] = {70, 70, 0,  200, 100, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
+    double Q[12] = {70, 70, 70,  200, 200, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
     double Alpha[12] = {1e-4, 1e-4, 5e-4, 1e-4, 1e-4, 5e-4,   1e-2, 1e-2, 1e-2, 1e-2, 1e-2, 1e-2};
 
     double *weights = Q;
@@ -327,7 +327,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     v_des_robot << stateCommand->data.stateDes[6], stateCommand->data.stateDes[7], 0;
 
     Vec3<double> v_des_world = seResult.rBody.transpose() * v_des_robot;
-    const double max_pos_error = .15;
+    const double max_pos_error = .05;
     double xStart = world_position_desired[0];
     double yStart = world_position_desired[1];
 
@@ -346,9 +346,9 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
                               seResult.rpy[2]*0,    // 2
-                              xStart*0,                                   // 3
-                              yStart*0,                                   // 4
-                              0.5 ,   // 5
+                              xStart,                                   // 3
+                              yStart,                                   // 4
+                              0.55 ,   // 5
                               0,                                        // 6
                               0,                                        // 7
                               stateCommand->data.stateDes[11],  // 8

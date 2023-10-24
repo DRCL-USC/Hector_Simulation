@@ -11,11 +11,10 @@
 #include "../include/common/Utilities/Timer.h"
 #include <fstream>
 
+
 // #define K_PRINT_EVERYTHING
 #define BIG_NUMBER 5e10
 // big enough to act like infinity, small enough to avoid numerical weirdness.
-#define NUM_VAR 12 // number of variables
-#define NUM_CON 26 // number of constraints
 
 RobotState rs;
 using Eigen::Dynamic;
@@ -23,7 +22,6 @@ using std::cout;
 using std::endl;
 using std::ofstream;
 
-// qpOASES::real_t a;
 
 Matrix<fpt, Dynamic, 13> A_qp;
 Matrix<fpt, Dynamic, Dynamic> B_qp;
@@ -37,12 +35,12 @@ Matrix<fpt, Dynamic, 1> L_b;
 Matrix<fpt, Dynamic, Dynamic> fmat;
 Matrix<fpt, Dynamic, Dynamic> qH;
 Matrix<fpt, Dynamic, 1> qg;
-Matrix<fpt, NUM_CON, NUM_VAR> F_control;
+Matrix<fpt, 16, 12> F_control;
 Matrix<fpt, 1, 3> tx_F;
 Matrix<fpt, 1, 3> ty_F;
 Matrix<fpt, 1, 3> DNFG;
 
-Matrix<fpt, Dynamic, Dynamic> gait_t;
+// Matrix<fpt,Dynamic,Dynamic> eye_12h;
 Matrix<fpt, Dynamic, Dynamic> Alpha_diag;
 Matrix<fpt, Dynamic, Dynamic> Alpha_rep;
 
@@ -65,7 +63,7 @@ char var_elim[2000];
 char con_elim[2000];
 
 Matrix<fpt, 3, 3> euler_to_rotation(fpt roll, fpt pitch, fpt yaw) {
-    
+
     fpt r = roll;
     fpt p = pitch;
     fpt y = yaw;
@@ -81,12 +79,16 @@ Matrix<fpt, 3, 3> euler_to_rotation(fpt roll, fpt pitch, fpt yaw) {
     Rz << cos(y), -sin(y), 0,
           sin(y), cos(y), 0,
           0, 0, 1;
-    Matrix<fpt, 3, 3> R;
-    R << 1, sin(r)*tan(p), cos(r)*tan(p),
-          0, cos(r), -sin(r),
-          0, sin(r)/cos(p), cos(r)/cos(p);  
+
+    Rb << cos(y)*cos(p), -sin(y), 0,
+          sin(y)*cos(p), cos(y), 0,
+          -sin(p), 0, 1;
+
+    Matrix<fpt, 3, 3> R = Rb.inverse();
+    // Matrix<fpt, 3, 3> R = Rz * Ry * Rx;
     return R;
 }
+
 
 
 // Returns QP solution
@@ -115,10 +117,7 @@ s8 is_odd(int a)
   return is_even(fmod(a,2) != 0);
 }
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
-// convert a 2D matrix to a 1D array
+// Sets parameter matrices to qpOASES type:
 void matrix_to_real(qpOASES::real_t *dst, Matrix<fpt, Dynamic, Dynamic> src, s16 rows, s16 cols)
 {
   s32 a = 0;
@@ -131,9 +130,6 @@ void matrix_to_real(qpOASES::real_t *dst, Matrix<fpt, Dynamic, Dynamic> src, s16
     }
   }
 }
-
-/******************************************************************************************************/
-/******************************************************************************************************/
 
 void c2qp(Matrix<fpt, 13, 13> Ac, Matrix<fpt, 13, 12> Bc, fpt dt, s16 horizon)
 {
@@ -197,9 +193,6 @@ void c2qp(Matrix<fpt, 13, 13> Ac, Matrix<fpt, 13, 12> Bc, fpt dt, s16 horizon)
  #endif
 }
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
 // Resizing & initaliztation:
 void resize_qp_mats(s16 horizon)
 {
@@ -218,20 +211,23 @@ void resize_qp_mats(s16 horizon)
   X_d.resize(13 * horizon, Eigen::NoChange);
   mcount += 13 * horizon;
 
-  U_b.resize(NUM_CON*horizon, Eigen::NoChange);
-  mcount += NUM_CON*horizon;
+  U_b.resize(16*horizon, Eigen::NoChange);
+  mcount += 16*horizon;
 
-  L_b.resize(NUM_CON*horizon, Eigen::NoChange);
-  mcount += NUM_CON*horizon;
+  L_b.resize(16*horizon, Eigen::NoChange);
+  mcount += 16*horizon;
 
-  fmat.resize(NUM_CON*horizon, 12*horizon);
-  mcount += NUM_CON*12*h2;
+  fmat.resize(16*horizon, 12*horizon);
+  mcount += 16*12*h2;
 
   qH.resize(12 * horizon, 12 * horizon);
   mcount += 12 * 12 * h2;
 
   qg.resize(12 * horizon, Eigen::NoChange);
   mcount += 12 * horizon;
+
+  // eye_12h.resize(12*horizon, 12*horizon);
+  // mcount += 12*12*horizon;
 
   Alpha_rep.resize(12 * horizon, 12 * horizon);
   mcount += 12 * 12 * horizon;
@@ -247,6 +243,7 @@ void resize_qp_mats(s16 horizon)
   L_b.setZero();
   fmat.setZero();
   qH.setZero();
+  // eye_12h.setIdentity();
   Alpha_rep.setZero();
 
   // TODO: use realloc instead of free/malloc on size changes
@@ -272,12 +269,12 @@ void resize_qp_mats(s16 horizon)
   mcount += 12*12*h2;
   g_qpoases = (qpOASES::real_t*)malloc(12*1*horizon*sizeof(qpOASES::real_t));
   mcount += 12*horizon;
-  A_qpoases = (qpOASES::real_t*)malloc(12*NUM_CON*horizon*horizon*sizeof(qpOASES::real_t));
-  mcount += 12*NUM_CON*h2;
-  lb_qpoases = (qpOASES::real_t*)malloc(NUM_CON*1*horizon*sizeof(qpOASES::real_t));
-  mcount += NUM_CON*horizon;
-  ub_qpoases = (qpOASES::real_t*)malloc(NUM_CON*1*horizon*sizeof(qpOASES::real_t));
-  mcount += NUM_CON*horizon;
+  A_qpoases = (qpOASES::real_t*)malloc(12*16*horizon*horizon*sizeof(qpOASES::real_t));
+  mcount += 12*16*h2;
+  lb_qpoases = (qpOASES::real_t*)malloc(16*1*horizon*sizeof(qpOASES::real_t));
+  mcount += 16*horizon;
+  ub_qpoases = (qpOASES::real_t*)malloc(16*1*horizon*sizeof(qpOASES::real_t));
+  mcount += 16*horizon;
   q_soln = (qpOASES::real_t *)malloc(12 * horizon * sizeof(qpOASES::real_t));
   mcount += 12 * horizon;
 
@@ -285,12 +282,12 @@ void resize_qp_mats(s16 horizon)
   mcount += 12*12*h2;
   g_red = (qpOASES::real_t*)malloc(12*1*horizon*sizeof(qpOASES::real_t));
   mcount += 12*horizon;
-  A_red = (qpOASES::real_t*)malloc(12*NUM_CON*horizon*horizon*sizeof(qpOASES::real_t));
-  mcount += 12*NUM_CON*h2;
-  lb_red = (qpOASES::real_t*)malloc(NUM_CON*1*horizon*sizeof(qpOASES::real_t));
-  mcount += NUM_CON*horizon;
-  ub_red = (qpOASES::real_t*)malloc(NUM_CON*1*horizon*sizeof(qpOASES::real_t));
-  mcount += NUM_CON*horizon;
+  A_red = (qpOASES::real_t*)malloc(12*16*horizon*horizon*sizeof(qpOASES::real_t));
+  mcount += 12*16*h2;
+  lb_red = (qpOASES::real_t*)malloc(16*1*horizon*sizeof(qpOASES::real_t));
+  mcount += 16*horizon;
+  ub_red = (qpOASES::real_t*)malloc(16*1*horizon*sizeof(qpOASES::real_t));
+  mcount += 16*horizon;
   q_red = (qpOASES::real_t*)malloc(12*horizon*sizeof(qpOASES::real_t));
   mcount += 12*horizon;
   real_allocated = 1;
@@ -302,9 +299,6 @@ void resize_qp_mats(s16 horizon)
 #endif
 }
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
 // Matrix Operations:
 inline Matrix<fpt, 3, 3> cross_mat(Matrix<fpt, 3, 3> I_inv, Matrix<fpt, 3, 1> r)
 {
@@ -315,9 +309,6 @@ inline Matrix<fpt, 3, 3> cross_mat(Matrix<fpt, 3, 3> I_inv, Matrix<fpt, 3, 1> r)
   return I_inv * cm;
 }
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
 // continuous time state space matrices.
 void ct_ss_mats(Matrix<fpt, 3, 3> I_world, fpt m, Matrix<fpt, 3, 2> r_feet, Matrix<fpt, 3, 3> R_yaw, Matrix<fpt, 13, 13> &A, Matrix<fpt, 13, 12> &B)
 {
@@ -325,7 +316,6 @@ void ct_ss_mats(Matrix<fpt, 3, 3> I_world, fpt m, Matrix<fpt, 3, 2> r_feet, Matr
   A.block<3, 3>(0, 6) << R_yaw;
   A.block<3, 3>(3, 9) << Matrix<fpt, 3, 3>::Identity();
   A.block<3, 1>(9, 12) << 0, 0, -1.f;
-  // std::cout << "///////////// A:" << A << std::endl;
 
   B.setZero();
   Matrix<fpt, 3, 3> I_inv = I_world.inverse();
@@ -334,17 +324,12 @@ void ct_ss_mats(Matrix<fpt, 3, 3> I_world, fpt m, Matrix<fpt, 3, 2> r_feet, Matr
   for (s16 b = 0; b < 2; b++)
   {
     B.block<3, 3>(6, b * 3) << cross_mat(I_inv, r_feet.col(b));
-    // std::cout << "r_feet :" << r_feet.col(b) << std::endl;
   }
   B.block<3, 3>(6, 6) << I_inv ;
   B.block<3, 3>(6, 9) << I_inv ;  //switch
-  B.block<3, 3>(9, 0) << Matrix<fpt, 3, 3>::Identity() / (m/1) ; //switch 
-  B.block<3, 3>(9, 3) << Matrix<fpt, 3, 3>::Identity() / (m/1) ;
-  // std::cout << "B:" << B << std::endl;
+  B.block<3, 3>(9, 0) << Matrix<fpt, 3, 3>::Identity() / m ; //switch
+  B.block<3, 3>(9, 3) << Matrix<fpt, 3, 3>::Identity() / m ;
 }
-
-/******************************************************************************************************/
-/******************************************************************************************************/
 
 void quat_to_rpy(Quaternionf q, Matrix<fpt, 3, 1> &rpy)
 {
@@ -355,12 +340,7 @@ void quat_to_rpy(Quaternionf q, Matrix<fpt, 3, 1> &rpy)
   rpy(0) = atan2(2.f * (q.w() * q.x() + q.y() * q.z()), 1. - 2.f * (sq(q.x()) + sq(q.y())));
   rpy(1) = asin(as);
   rpy(2) = atan2(2.f * (q.w() * q.z() + q.x() * q.y()), 1. - 2.f * (sq(q.y()) + sq(q.z())));
-  // std::cout << "MPC solver rpy: " << rpy(0) << " " << rpy(1) << " " << rpy(2) << std::endl;
 }
-
-/******************************************************************************************************/
-/******************************************************************************************************/
-
 void print_problem_setup(problem_setup *setup)
 {
   printf("DT: %.3f\n", setup->dt);
@@ -368,9 +348,6 @@ void print_problem_setup(problem_setup *setup)
   printf("F_Max: %.3f\n", setup->f_max);
   printf("Horizon: %d\n", setup->horizon);
 }
-
-/******************************************************************************************************/
-/******************************************************************************************************/
 
 void print_update_data(update_data_t *update, s16 horizon)
 {
@@ -386,18 +363,12 @@ void print_update_data(update_data_t *update, s16 horizon)
   print_named_array("gait", update->gait, horizon, 2);
 }
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
 Matrix<fpt, 13, 1> x_0;
 Matrix<fpt, 3, 3> I_world;
 Matrix<fpt, 13, 13> A_ct;
 Matrix<fpt, 13, 12> B_ct_r;
 
-/******************************************************************************************************/
-/******************************************************************************************************/
-
-// Solve method
+// Main function:
 void solve_mpc(update_data_t *update, problem_setup *setup)
 {
   //Joint angles to compute foot rotation
@@ -421,7 +392,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
     for(int i = 0; i < 10; i++){
       q(i) = fmod(q(i) , PI2);
     }
-        
+
   // cout << "solver q:\n"
       //  << q << endl;
   //
@@ -443,14 +414,25 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   // roll pitch yaw
   Matrix<fpt, 3, 1> rpy;
   quat_to_rpy(rs.q, rpy);
-  // Eigen::Matrix3d rot_mat;
   Matrix<fpt, 3, 3> Rb;
-  std::cout << "rpy: " << rpy(0) << ", " << rpy(1) << ", " << rpy(2) << std::endl;
-
   Rb = euler_to_rotation(rpy(0), rpy(1), rpy(2));
+
+  // initial state (13 state representation)
   x_0 << rpy(0), rpy(1), rpy(2), rs.p, rs.w, rs.v, 9.81f;
   I_world = rs.R * rs.I_body * rs.R.transpose(); // original
-  ct_ss_mats(I_world, 12.0, rs.r_feet, Rb, A_ct, B_ct_r);
+
+  ct_ss_mats(I_world, 10.0, rs.r_feet, Rb, A_ct, B_ct_r);
+
+  // Rotation of Foot:
+  Matrix<fpt, 3, 3> R_foot_L;
+  Matrix<fpt, 3, 3> R_foot_R;
+  R_foot_L << - 1.0*sin(q(4))*(cos(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) + sin(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))) - cos(q(4))*(1.0*sin(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) - cos(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))), -1.0*cos(q(1))*sin(q(0)), cos(q(4))*(cos(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) + sin(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))) - sin(q(4))*(1.0*sin(q(3))*(cos(q(0))*sin(q(2)) + cos(q(2))*sin(q(0))*sin(q(1))) - cos(q(3))*(cos(q(0))*cos(q(2)) - 1.0*sin(q(0))*sin(q(1))*sin(q(2)))),
+              cos(q(4))*(cos(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) - 1.0*sin(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))) - 1.0*sin(q(4))*(sin(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) + cos(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))),      cos(q(0))*cos(q(1)), cos(q(4))*(sin(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) + cos(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))) + sin(q(4))*(cos(q(3))*(cos(q(2))*sin(q(0)) + cos(q(0))*sin(q(1))*sin(q(2))) - 1.0*sin(q(3))*(sin(q(0))*sin(q(2)) - 1.0*cos(q(0))*cos(q(2))*sin(q(1)))),
+                                                                                                                                                                                                                            -1.0*sin(q(2) + q(3) + q(4))*cos(q(1)),              sin(q(1)),                                                                                                                                                                                                                             cos(q(2) + q(3) + q(4))*cos(q(1));
+  R_foot_R << - 1.0*sin(q(9))*(cos(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) + sin(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))) - cos(q(9))*(1.0*sin(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) - cos(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))), -1.0*cos(q(6))*sin(q(5)), cos(q(9))*(cos(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) + sin(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))) - sin(q(9))*(1.0*sin(q(8))*(cos(q(5))*sin(q(7)) + cos(q(7))*sin(q(5))*sin(q(6))) - cos(q(8))*(cos(q(5))*cos(q(7)) - 1.0*sin(q(5))*sin(q(6))*sin(q(7)))),
+              cos(q(9))*(cos(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) - 1.0*sin(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))) - 1.0*sin(q(9))*(sin(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) + cos(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))),      cos(q(5))*cos(q(6)), cos(q(9))*(sin(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) + cos(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))) + sin(q(9))*(cos(q(8))*(cos(q(7))*sin(q(5)) + cos(q(5))*sin(q(6))*sin(q(7))) - 1.0*sin(q(8))*(sin(q(5))*sin(q(7)) - 1.0*cos(q(5))*cos(q(7))*sin(q(6)))),
+                                                                                                                                                                                                                            -1.0*sin(q(7) + q(8) + q(9))*cos(q(6)),              sin(q(6)),                                                                                                                                                                                                                             cos(q(7) + q(8) + q(9))*cos(q(6));
+
 
 #ifdef K_PRINT_EVERYTHING
   cout << "Initial state: \n"
@@ -481,22 +463,96 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
 
   double motorTorqueLimit = 33.5;
 
-  gait_t.resize(2*setup->horizon, 1);
-  for(int i = 0; i < 2*setup->horizon; i++){
-    gait_t(i,0) = update->gait[i];
+
+  for (s16 leg = 0; leg < 2; leg ++){
+
+    for(s16 i = 0; i < setup->horizon; i++){
+      for (s16 j = 0; j < 4; j++){  // bound
+        U_b(8*leg + j + 16*i) = BIG_NUMBER;
+        L_b(8*leg + j + 16*i) = 0.0f;
+      }
+        U_b(8*leg + 4 + 16*i) = 0.01f;
+        U_b(8*leg + 5 + 16*i) = 0.0f;
+        U_b(8*leg + 6 + 16*i) = 0.0f;
+        U_b(8*leg + 7 + 16*i) = setup->f_max * update->gait[2*i + leg];
+        L_b(8*leg + 4 + 16*i) = 0.0f;
+        L_b(8*leg + 5 + 16*i) = -BIG_NUMBER;
+        L_b(8*leg + 6 + 16*i) = -BIG_NUMBER;
+        L_b(8*leg + 7 + 16*i) = 0.0f ;
+    }
   }
 
-  //Constraint Calculation
-  Constraints constraints(rs, q, setup->horizon, NUM_CON, motorTorqueLimit, BIG_NUMBER, setup->f_max, gait_t);
-  U_b = constraints.GetUpperBound();
-  L_b = constraints.GetLowerBound();
+  // QP Lower Bound
 
 
-  F_control = constraints.GetConstraintMatrix();
+  // Initalization of Line Contact Constraint Parameters
+  fpt mu = 2.0;
+  fpt lt = 0.09;
+  fpt lh = 0.06;
+
+  // Matrix<fpt,5,3> f_block;
+  Matrix<fpt,10,12> f_blockz;
+  Matrix<fpt,16,12> F_control;
+
+  Matrix<fpt,1,3> lt_vec;
+  Matrix<fpt,1,3> lt_3D;
+  lt_vec << 0, 0, lt;
+
+  Matrix<fpt,1,3> lh_vec;
+  Matrix<fpt,1,3> lh_3D;
+  lh_vec << 0, 0, lh;
+
+  Matrix<fpt,1,3> M_vec;
+  M_vec << 0, 1.0, 0;
+  Matrix<fpt,1,3> M_3D;
+
+  Matrix<fpt,1,3> Moment_selection(1.f, 0, 0);
+  Matrix<fpt,1,3> Moment_selection_3D;
+
+  F_control.setZero();
+//leg 1
+  F_control.block<1, 12>(0, 0) //Friction leg 1
+      << -mu, 0, 1.f, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(1, 0)
+      << mu, 0, 1.f, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(2, 0)
+      << 0, -mu, 1.f,  0, 0, 0, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(3, 0)
+      << 0,  mu, 1.f,  0, 0, 0, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(4, 0) //Mx Leg 1
+      << 0, 0, 0, 0, 0, 0, Moment_selection * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
+  F_control.block<1, 12>(5, 0) //Line Leg 1
+      << -lt_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0,  M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
+  F_control.block<1, 12>(6, 0)
+      <<  -lh_vec * R_foot_L.transpose()* rs.R.transpose(),   0, 0, 0, -M_vec * R_foot_L.transpose()* rs.R.transpose(),  0, 0, 0;
+  F_control.block<1, 12>(7, 0) //Fz Leg 1
+      << 0, 0, 2.f, 0, 0, 0,   0, 0, 0, 0, 0, 0;
+
+
+
+//leg 2
+  F_control.block<1, 12>(8, 0) //Friction leg 2
+      <<  0, 0, 0,   -mu, 0, 1.f, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(9, 0)
+      <<  0, 0, 0,    mu, 0, 1.f, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(10, 0)
+      <<   0, 0, 0, 0, -mu, 1.f, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(11, 0)
+      <<   0, 0, 0, 0, mu, 1.f, 0, 0, 0, 0, 0, 0;
+  F_control.block<1, 12>(12, 0) //Mx Leg 1
+      << 0, 0, 0, 0, 0, 0, 0, 0, 0, Moment_selection * R_foot_R.transpose()* rs.R.transpose();
+  F_control.block<1, 12>(13, 0) //Line Leg 2
+      << 0, 0, 0,     -lt_vec * R_foot_R.transpose()* rs.R.transpose(), 0, 0, 0,    M_vec * R_foot_R.transpose()* rs.R.transpose();
+  F_control.block<1, 12>(14, 0)
+      << 0, 0, 0,    -lh_vec * R_foot_R.transpose()* rs.R.transpose(),  0, 0, 0,   M_vec * R_foot_R.transpose()* rs.R.transpose();
+  F_control.block<1, 12>(15, 0)  //Fz Leg 2
+      << 0, 0, 0, 0, 0, 2.f, 0, 0, 0, 0, 0, 0;
+
+
   // Set to fmat QP
   for(s16 i = 0; i < setup->horizon; i++)
   {
-    fmat.block(i*NUM_CON,i*12,NUM_CON,12) = F_control;
+    fmat.block(i*16,i*12,16,12) = F_control;
   }
   // Construct K:
   Alpha_diag.resize(12, 12);
@@ -517,12 +573,12 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   // Calls function that sets parameters matrices in qpOASES types
   matrix_to_real(H_qpoases,qH,setup->horizon*12, setup->horizon*12);
   matrix_to_real(g_qpoases,qg,setup->horizon*12, 1);
-  matrix_to_real(A_qpoases,fmat,setup->horizon*NUM_CON, setup->horizon*12);
-  matrix_to_real(ub_qpoases,U_b,setup->horizon*NUM_CON, 1);
-  matrix_to_real(lb_qpoases,L_b,setup->horizon*NUM_CON, 1);
+  matrix_to_real(A_qpoases,fmat,setup->horizon*16, setup->horizon*12);
+  matrix_to_real(ub_qpoases,U_b,setup->horizon*16, 1);
+  matrix_to_real(lb_qpoases,L_b,setup->horizon*16, 1);
 
 
-  s16 num_constraints = NUM_CON*setup->horizon;
+  s16 num_constraints = 16*setup->horizon;
   s16 num_variables = 12*setup->horizon;
 
   // Max # of working set recalculations
@@ -541,24 +597,26 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   {
     if (!(near_zero(lb_qpoases[i]) && near_zero(ub_qpoases[i]))) continue;
 
-      
+
     double *c_row = &A_qpoases[i * num_variables];
 
     for (int j = 0; j < num_variables; j++)
     {
-      
+
+
       if (near_one(c_row[j]))
       {
           new_vars -= 6;
-          new_cons -= 13;
+          new_cons -= 8;
 
           int cs;
           if (j%2 == 0){
-            cs = (j+4)/6*13-1;
+            cs = (j+4)/6*8-1;
           }
           else{
-            cs = (j+1)/6*13+12;
+            cs = (j+1)/6*8+7;
           }
+
 
           var_elim[j+6] = 1;
           var_elim[j+5] = 1;
@@ -566,24 +624,21 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
           var_elim[j-2] = 1;
           var_elim[j-1] = 1;
           var_elim[j  ] = 1;
-          
+
           con_elim[cs-0] = 1;
           con_elim[cs-1] = 1;
           con_elim[cs-2] = 1;
           con_elim[cs-3] = 1;
-          con_elim[cs-4] = 1;         
+          con_elim[cs-4] = 1;
           con_elim[cs-5] = 1;
           con_elim[cs-6] = 1;
           con_elim[cs-7] = 1;
-          con_elim[cs-8] = 1;
-          con_elim[cs-9] = 1;         
-          con_elim[cs-10] = 1;
-          con_elim[cs-11] = 1;
-          con_elim[cs-12] = 1;
       }
     }
   }
-  
+
+  std::cout << "newvars" << new_vars << std::endl;
+  std::cout << "newcons" << new_cons << std::endl;
 
   if (1 == 1)
   {
@@ -652,9 +707,9 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
     problem_red.setOptions(op);
 
     // QP initialized
-
     int rval = problem_red.init(H_red, g_red, A_red, NULL, NULL, lb_red, ub_red, nWSR);
     (void)rval;
+
     int rval2 = problem_red.getPrimalSolution(q_red);
 
     if (rval2 != qpOASES::SUCCESSFUL_RETURN)

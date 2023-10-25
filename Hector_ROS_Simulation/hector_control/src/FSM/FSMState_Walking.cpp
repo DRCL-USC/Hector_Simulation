@@ -28,9 +28,9 @@ void FSMState_Walking::run()
     _data->_stateEstimator->run(); 
     _userValue = _data->_lowState->userValue;
 
-    v_des_body[0] = (double)invNormalize(_userValue.ly, -1.5, 1.5);
-    v_des_body[1] = (double)invNormalize(_userValue.rx, -0.5, 0.5);
-    turn_rate = (double)invNormalize(_userValue.lx, -2.0, 2.0);
+    v_des_body[0] = (double)invNormalize(_userValue.ly, -0.75, 0.75);
+    v_des_body[1] = (double)invNormalize(_userValue.rx, -0.25, 0.25);
+    turn_rate = (double)invNormalize(_userValue.lx, -0.5, 0.5);
     // std::cout << "vx vy " << v_des_body[0] << " " << v_des_body[1] << std::endl;
     _data->_desiredStateCommand->setStateCommands(roll, pitch, v_des_body, turn_rate);
     

@@ -63,6 +63,10 @@ The robot should be standing on the ground
 * Click the start button at the bottom of the simulator, the robot should stand up/move away
 * In some occasions the controller does not kick in after starting, please terminate the controller with ctrl + \\. Then go back to the simulator, pause, and reset (ctrl + R). Rerun controller. 
 
+## Keyboard Control: 
+* Inside the terminal window, use W or S to control x direction speed
+* Use A or D to control robot turning (TODO: seems to have a small bug when turning past 90 degrees)
+* Use J or L to control y direction speed
 
 ## Cite Us:
 Thank you for choosing our software for your research and development, we highly appreciate your citing our work:
@@ -87,5 +91,5 @@ Junheng Li -- junhengl@usc.edu
 Please read the License.md for details. 
 
 ## Acknowledgement：
-
+The authors would like to express special thanks to MIT Biomimetic Lab for providing the [cheetah MPC framework](https://github.com/dbdxnuliba/mit-biomimetics_Cheetah) and Unitree Robotics for providing the Unitree gazebo simulation framework.
 

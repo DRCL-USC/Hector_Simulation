@@ -16,7 +16,7 @@ ConvexMPCLocomotion::ConvexMPCLocomotion(double _dt, int _iterations_between_mpc
  walking(horizonLength, Vec2<int>(0, 5), Vec2<int>(5, 5), "Walking"),
  standing(horizonLength, Vec2<int>(0, 0), Vec2<int>(10, 10), "Standing")
 {
-  gaitNumber = 7;
+  gaitNumber = 1;
   dtMPC = dt * iterationsBetweenMPC;
   rpy_int[2] = 0;
   for (int i = 0; i < 2; i++)
@@ -89,7 +89,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
     vBody_Ori_des[2] = 0; // set this for now
 
     //
-    if (gaitNumber == 7)
+    if (gaitNumber == 1)
     {
       pBody_des[0] = seResult.position[0];
       pBody_des[1] = seResult.position[1];
@@ -269,7 +269,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
 void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data, bool omniMode)
 {
 
-  if ((iterationCounter % 10) == 0)
+  if ((iterationCounter % 5) == 0)
   {
 
     auto seResult = data._stateEstimator->getResult();
@@ -313,7 +313,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
       r[i] = pFoot[i % 2][i / 2] - seResult.position[i / 2];
     }
     //MPC Weights
-    double Q[12] = {70, 70, 70,  200, 200, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
+    double Q[12] = {100, 100, 150,  200, 200, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
     double Alpha[12] = {1e-4, 1e-4, 5e-4, 1e-4, 1e-4, 5e-4,   1e-2, 1e-2, 1e-2, 1e-2, 1e-2, 1e-2};
 
     double *weights = Q;
@@ -345,7 +345,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
 
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
-                              seResult.rpy[2]*0,    // 2
+                              seResult.rpy[2],    // 2
                               xStart,                                   // 3
                               yStart,                                   // 4
                               0.55 ,   // 5

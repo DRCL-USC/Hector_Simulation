@@ -85,7 +85,6 @@ Matrix<fpt, 3, 3> euler_to_rotation(fpt roll, fpt pitch, fpt yaw) {
           -sin(p), 0, 1;
 
     Matrix<fpt, 3, 3> R = Rb.inverse();
-    // Matrix<fpt, 3, 3> R = Rz * Ry * Rx;
     return R;
 }
 
@@ -415,7 +414,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   Matrix<fpt, 3, 1> rpy;
   quat_to_rpy(rs.q, rpy);
   Matrix<fpt, 3, 3> Rb;
-  Rb = euler_to_rotation(rpy(0), rpy(1), rpy(2));
+  Rb = euler_to_rotation(rpy(0), rpy(1), rpy(2)); // use this instead of rs.R_yaw, this is not Rotation matrix
 
   // initial state (13 state representation)
   x_0 << rpy(0), rpy(1), rpy(2), rs.p, rs.w, rs.v, 9.81f;

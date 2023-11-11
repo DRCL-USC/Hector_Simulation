@@ -4,7 +4,7 @@
 
 This branch contains the ROS+Gazebo simulation for the Hector humanoid robot. 
 
-For humanoid ROS model with arms use ROS_Humanoid_Simulation.
+For humanoid ROS model with arms use the ROS_Humanoid_Simulation branch.
 
 <img src="https://github.com/DRCL-USC/Hector_Simulation/blob/Matlab_Simulation/STL%20files/Hector_picture.jpg" width=50% height=50%>
 

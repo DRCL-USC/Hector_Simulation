@@ -46,7 +46,7 @@ void CheatIO::sendRecv(const LowlevelCmd *cmd, LowlevelState *state)
 
 void CheatIO::sendCmd(const LowlevelCmd *cmd)
 {
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 16; i++){
         _lowCmd.motorCmd[i].mode = 0X0A; // alwasy set it to 0X0A
         _lowCmd.motorCmd[i].q = cmd->motorCmd[i].q;
         _lowCmd.motorCmd[i].dq = cmd->motorCmd[i].dq;
@@ -54,7 +54,7 @@ void CheatIO::sendCmd(const LowlevelCmd *cmd)
         _lowCmd.motorCmd[i].Kd = cmd->motorCmd[i].Kd;
         _lowCmd.motorCmd[i].Kp = cmd->motorCmd[i].Kp;
     }
-    for(int m = 0; m < 10; m++){
+    for(int m = 0; m < 16; m++){
         _servo_pub[m].publish(_lowCmd.motorCmd[m]);
     }
 
@@ -63,7 +63,7 @@ void CheatIO::sendCmd(const LowlevelCmd *cmd)
 
 void CheatIO::recvState(LowlevelState *state)
 {
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 16; i++)
     {
         state->motorState[i].q = _highState.motorState[i].q;
         state->motorState[i].dq = _highState.motorState[i].dq;
@@ -89,6 +89,14 @@ void CheatIO::initSend(){
     _servo_pub[7] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_thigh_controller/command", 1);
     _servo_pub[8] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_calf_controller/command", 1);
     _servo_pub[9] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_toe_controller/command", 1);
+  
+    _servo_pub[10] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/L_twist_controller/command", 1);
+    _servo_pub[11] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/L_shoulder_controller/command", 1);
+    _servo_pub[12] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/L_elbow_controller/command", 1);
+  
+    _servo_pub[13] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_twist_controller/command", 1);
+    _servo_pub[14] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_shoulder_controller/command", 1);
+    _servo_pub[15] = _nm.advertise<unitree_legged_msgs::MotorCmd>( "/" + _robot_name + "_gazebo/R_elbow_controller/command", 1);        
 }
 
 void CheatIO::initRecv(){
@@ -103,6 +111,15 @@ void CheatIO::initRecv(){
     _servo_sub[7] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_thigh_controller/state", 1, &CheatIO::RthighCallback, this);
     _servo_sub[8] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_calf_controller/state", 1, &CheatIO::RcalfCallback, this);
     _servo_sub[9] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_toe_controller/state", 1, &CheatIO::RtoeCallback, this);
+
+    _servo_sub[10] = _nm.subscribe( "/" + _robot_name + "_gazebo/L_twist_controller/state", 1, &CheatIO::L_twist_Callback, this);
+    _servo_sub[11] = _nm.subscribe( "/" + _robot_name + "_gazebo/L_shoulder_controller/state", 1, &CheatIO::L_shoulder_Callback, this);
+    _servo_sub[12] = _nm.subscribe( "/" + _robot_name + "_gazebo/L_elbow_controller/state", 1, &CheatIO::L_elbow_Callback, this);
+    
+    _servo_sub[13] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_twist_controller/state", 1, &CheatIO::R_twist_Callback, this);
+    _servo_sub[14] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_shoulder_controller/state", 1, &CheatIO::R_shoulder_Callback, this);
+    _servo_sub[15] = _nm.subscribe( "/" + _robot_name + "_gazebo/R_elbow_controller/state", 1, &CheatIO::R_elbow_Callback, this);    
+
 }
 
 void CheatIO::StateCallback(const gazebo_msgs::ModelStates & msg)
@@ -213,4 +230,48 @@ void CheatIO::RtoeCallback(const unitree_legged_msgs::MotorState& msg)
     _highState.motorState[9].q = msg.q;
     _highState.motorState[9].dq = msg.dq;
     _highState.motorState[9].tauEst = msg.tauEst;
+}
+
+
+void CheatIO::L_twist_Callback(const unitree_legged_msgs::MotorState& msg){
+    _highState.motorState[10].mode = msg.mode;
+    _highState.motorState[10].q = msg.q;
+    _highState.motorState[10].dq = msg.dq;
+    _highState.motorState[10].tauEst = msg.tauEst;
+}
+void CheatIO::L_shoulder_Callback(const unitree_legged_msgs::MotorState& msg){
+
+    _highState.motorState[11].mode = msg.mode;
+    _highState.motorState[11].q = msg.q;
+    _highState.motorState[11].dq = msg.dq;
+    _highState.motorState[11].tauEst = msg.tauEst;
+
+}
+void CheatIO::L_elbow_Callback(const unitree_legged_msgs::MotorState& msg){
+    _highState.motorState[12].mode = msg.mode;
+    _highState.motorState[12].q = msg.q;
+    _highState.motorState[12].dq = msg.dq;
+    _highState.motorState[12].tauEst = msg.tauEst;    
+
+}
+void CheatIO::R_twist_Callback(const unitree_legged_msgs::MotorState& msg){
+    _highState.motorState[13].mode = msg.mode;
+    _highState.motorState[13].q = msg.q;
+    _highState.motorState[13].dq = msg.dq;
+    _highState.motorState[13].tauEst = msg.tauEst; 
+
+}
+void CheatIO::R_shoulder_Callback(const unitree_legged_msgs::MotorState& msg){
+    _highState.motorState[14].mode = msg.mode;
+    _highState.motorState[14].q = msg.q;
+    _highState.motorState[14].dq = msg.dq;
+    _highState.motorState[14].tauEst = msg.tauEst; 
+
+}
+void CheatIO::R_elbow_Callback(const unitree_legged_msgs::MotorState& msg){
+    _highState.motorState[15].mode = msg.mode;
+    _highState.motorState[15].q = msg.q;
+    _highState.motorState[15].dq = msg.dq;
+    _highState.motorState[15].tauEst = msg.tauEst; 
+
 }

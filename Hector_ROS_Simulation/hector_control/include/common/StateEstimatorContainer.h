@@ -37,7 +37,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "LegController.h"
+#include "LowLevelController.h"
 #include "../messages/LowlevelState.h"
 
 /*!
@@ -65,7 +65,7 @@ struct StateEstimate {
 struct StateEstimatorData {
     StateEstimate* result;
     LowlevelState* lowState;
-    LegControllerData* legControllerData;
+    LowLevelControllerData* legControllerData;
 };
 
 /*!
@@ -91,7 +91,7 @@ class StateEstimatorContainer {
     // Constructor
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     StateEstimatorContainer(LowlevelState *_lowState,
-                            LegControllerData *_legControllerData,
+                            LowLevelControllerData *_legControllerData,
                             StateEstimate *stateEstimate){
         _data.lowState = _lowState;
         _data.legControllerData = _legControllerData;

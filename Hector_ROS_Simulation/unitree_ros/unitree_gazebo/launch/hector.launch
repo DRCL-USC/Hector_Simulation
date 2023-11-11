@@ -48,6 +48,8 @@
           output="screen" ns="/hector_gazebo" args="joint_state_controller
           L_hip_controller L_hip2_controller L_thigh_controller L_calf_controller L_toe_controller
           R_hip_controller R_hip2_controller R_thigh_controller R_calf_controller R_toe_controller
+          L_twist_controller L_shoulder_controller L_elbow_controller
+          R_twist_controller R_shoulder_controller R_elbow_controller         
          "/>
 
     <!-- convert joint states to TF transforms for rviz, etc -->

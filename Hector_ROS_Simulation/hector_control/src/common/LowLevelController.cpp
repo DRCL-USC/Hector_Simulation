@@ -1,10 +1,10 @@
-#include "../../include/common/LegController.h"
+#include "../../include/common/LowLevelController.h"
 #include <eigen3/Eigen/Core>
 
 // upper level of joint controller 
 // send data to joint controller
 
-void LegControllerCommand::zero(){
+void LowLevelControllerCommand::zero(){
     tau = Vec5<double>::Zero();
     qDes = Vec5<double>::Zero();
     qdDes = Vec5<double>::Zero();
@@ -23,7 +23,7 @@ void LegControllerCommand::zero(){
 /*!
  * Zero leg data
  */ 
-void LegControllerData::zero(){
+void LowLevelControllerData::zero(){
     q = Vec5<double>::Zero();
     qd = Vec5<double>::Zero();
     p = Vec3<double>::Zero();
@@ -33,13 +33,13 @@ void LegControllerData::zero(){
     tau = Vec5<double>::Zero();
 }
 
-void LegController::zeroCommand(){
+void LowLevelController::zeroCommand(){
     for (int i = 0; i < 2; i++){
         commands[i].zero();
     }
 }
 
-void LegController::updateData(const LowlevelState* state){
+void LowLevelController::updateData(const LowlevelState* state){
     for (int leg = 0; leg < 2; leg++){
         for(int j = 0; j < 5; j++){
             data[leg].q(j) = state->motorState[leg*5+j].q;
@@ -54,7 +54,7 @@ void LegController::updateData(const LowlevelState* state){
 
 }
 
-void LegController::updateCommand(LowlevelCmd* cmd){
+void LowLevelController::updateCommand(LowlevelCmd* cmd){
 
     for (int i = 0; i < 2; i++){
         Vec6<double> footForce = commands[i].feedforwardForce;
@@ -95,6 +95,9 @@ void LegController::updateCommand(LowlevelCmd* cmd){
             cmd->motorCmd[i*5+j].Kd = commands[i].kdJoint(j,j);
             std::cout << Side[i] << " " << limbName[j] <<" torque cmd  =  " << cmd->motorCmd[i*5+j].tau << std::endl;            
         }
+        
+        //To access left  arm controllers use motorCmd 10 through 12
+        //To access right arm controllers use motorCmd 13 through 15
 
         commands[i].tau << 0, 0, 0, 0, 0; // zero torque command to prevent interference
         

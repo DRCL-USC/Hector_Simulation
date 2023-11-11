@@ -101,7 +101,7 @@ struct IMU
 struct LowlevelState
 {
     IMU imu;
-    MotorState motorState[10];
+    MotorState motorState[16];
     UserCommand userCmd;
     UserValue userValue;
 

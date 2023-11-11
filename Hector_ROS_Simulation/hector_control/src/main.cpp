@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
     Biped biped;
     biped.setBiped();
 
-    LegController* legController = new LegController(biped);
+    LowLevelController* legController = new LowLevelController(biped);
     LowlevelCmd* cmd = new LowlevelCmd();
     LowlevelState* state = new LowlevelState();
 

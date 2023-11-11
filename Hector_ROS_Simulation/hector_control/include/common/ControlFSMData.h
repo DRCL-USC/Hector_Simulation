@@ -2,7 +2,7 @@
 #define CONTROLFSMDATA_H
 
 #include "DesiredCommand.h"
-#include "LegController.h"
+#include "LowLevelController.h"
 #include "Biped.h"
 #include "../messages/LowLevelCmd.h"
 #include "../messages/LowlevelState.h"
@@ -13,7 +13,7 @@ struct ControlFSMData {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   Biped *_biped;
   StateEstimatorContainer *_stateEstimator;
-  LegController *_legController;
+  LowLevelController *_legController;
   DesiredStateCommand *_desiredStateCommand;
   IOInterface *_interface;
   LowlevelCmd *_lowCmd;

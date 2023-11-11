@@ -34,8 +34,8 @@ SOFTWARE.
 /*!
  * Data sent from control algorithm to legs
  */ 
-    struct LegControllerCommand{
-        LegControllerCommand() {zero();}
+    struct LowLevelControllerCommand{
+        LowLevelControllerCommand() {zero();}
 
         void zero();
 
@@ -53,8 +53,8 @@ SOFTWARE.
 /*!
  * Data returned from legs to control code
  */ 
-    struct LegControllerData{
-        LegControllerData() {zero();}
+    struct LowLevelControllerData{
+        LowLevelControllerData() {zero();}
         void setBiped(Biped& biped) { hector = &biped; }
 
         void zero();
@@ -69,10 +69,10 @@ SOFTWARE.
 /*!
  * Controller for 2 legs of hector
  */ 
-    class LegController {
+    class LowLevelController {
       public:
       EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-        LegController(Biped& biped) : _biped(biped) {
+        LowLevelController(Biped& biped) : _biped(biped) {
             for (auto& dat : data) dat.setBiped(_biped);
             for(int i = 0; i < 2; i++){
                 commands[i].zero();
@@ -86,8 +86,8 @@ SOFTWARE.
         void updateCommand(LowlevelCmd* cmd);
         void setEnabled(bool enabled) {_legsEnabled = enabled;};
 
-        LegControllerCommand commands[2];
-        LegControllerData data[2];
+        LowLevelControllerCommand commands[2];
+        LowLevelControllerData data[2];
         bool _legsEnabled = false;
         std::string limbName[5] = {"Hip 1", "Hip 2", "Thigh", "Knee ", "Toe  "};
         std::string Side[2] = {"Left ", "Right"};        

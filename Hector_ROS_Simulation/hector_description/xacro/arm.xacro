@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:include filename="$(find hector_description)/xacro/arm_transmission.xacro"/>
+
     <xacro:macro name="arm" params="name mirror mirror_dae  *origin">  
         
         <joint name="${name}_twist_joint" type="revolute">
@@ -18,10 +20,10 @@
             <axis xyz="0 0 1"/>
             <dynamics damping="${damping}" friction="${friction}"/>
             <xacro:if value="${(mirror_dae == True)}">
-                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${twist_min*PI/180.0}" upper="${twist_max*PI/180.0}"/>
+                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${twist_min}" upper="${twist_max}"/>
             </xacro:if>
             <xacro:if value="${(mirror_dae == False)}">
-                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${-twist_max*PI/180.0}" upper="${-twist_min*PI/180.0}"/>
+                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${-twist_max}" upper="${-twist_min}"/>
             </xacro:if>  
         </joint>
         <link name="${name}_twist">
@@ -67,7 +69,7 @@
             <child link="${name}_shoulder"/>
             <axis xyz="0 1 0"/>
             <dynamics damping="${damping}" friction="${friction}"/>
-            <limit effort="${shoulder_torque_max}" velocity="${shoulder_velocity_max}" lower="${shoulder_min*PI/180.0}" upper="${shoulder_max*PI/180.0}"/>
+            <limit effort="${shoulder_torque_max}" velocity="${shoulder_velocity_max}" lower="${shoulder_min}" upper="${shoulder_max}"/>
         </joint>
         <link name="${name}_shoulder">
             <visual>
@@ -109,7 +111,7 @@
             <child link="${name}_elbow"/>
             <axis xyz="0 1 0"/>
             <dynamics damping="${damping}" friction="${friction}"/>
-            <limit effort="${elbow_torque_max}" velocity="${elbow_velocity_max}" lower="${elbow_min*PI/180.0}" upper="${elbow_max*PI/180.0}"/>
+            <limit effort="${elbow_torque_max}" velocity="${elbow_velocity_max}" lower="${elbow_min}" upper="${elbow_max}"/>
         </joint>
         <link name="${name}_elbow">
             <visual>
@@ -134,6 +136,7 @@
                     izz="${elbow_izz}"/>       
             </inertial>
         </link>
+        <xacro:arm_transmission name="${name}"/>
     </xacro:macro>
 </robot>
 

@@ -29,7 +29,7 @@ using namespace std;
 
 
 struct CMPC_Result {
-  LegControllerCommand commands[2];
+  LowLevelControllerCommand commands[2];
   Vec2<float> contactPhase;
 };
 

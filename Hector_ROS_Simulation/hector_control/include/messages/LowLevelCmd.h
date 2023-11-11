@@ -54,7 +54,7 @@ struct MotorCmd{
 };
 
 struct LowlevelCmd{
-    MotorCmd motorCmd[10];
+    MotorCmd motorCmd[16];
 };
 
 #endif // LOWLEVELCMD_H

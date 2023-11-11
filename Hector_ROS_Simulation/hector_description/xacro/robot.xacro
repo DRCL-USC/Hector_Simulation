@@ -5,6 +5,7 @@
     <xacro:include filename="$(find hector_description)/xacro/const.xacro"/>
     <xacro:include filename="$(find hector_description)/xacro/materials.xacro"/>
     <xacro:include filename="$(find hector_description)/xacro/leg.xacro"/>
+    <xacro:include filename="$(find hector_description)/xacro/arm.xacro"/>
     <xacro:include filename="$(find hector_description)/xacro/stairs.xacro"/>
     <xacro:include filename="$(find hector_description)/xacro/gazebo.xacro"/>
 
@@ -127,5 +128,13 @@
     <xacro:leg name="R" mirror="-1" mirror_dae="True">
         <origin rpy="0 0 0" xyz="${hip_offset_x} ${-hip_offset_y} ${-hip_offset_z}"/>
     </xacro:leg>
+
+    <xacro:arm name="L" mirror="1" mirror_dae="False">
+        <origin rpy="0 0 0" xyz="${hip_offset_x} ${hip_offset_y} ${-hip_offset_z}"/>
+    </xacro:arm>
+
+    <xacro:arm name="R" mirror="-1" mirror_dae="True">
+        <origin rpy="0 0 0" xyz="${hip_offset_x} ${-hip_offset_y} ${-hip_offset_z}"/>
+    </xacro:arm>    
 
 </robot>

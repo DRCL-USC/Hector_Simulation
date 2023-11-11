@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="arm" params="name mirror mirror_dae  *origin">  
+        
+        <joint name="${name}_twist_joint" type="revolute">
+       
+            <xacro:if value="${(mirror_dae == True)}">
+            <origin rpy="0 0 0" xyz="0.0 0.047 0.1725"/>
+            </xacro:if>
+            
+            <xacro:if value="${(mirror_dae == False)}">
+            <origin rpy="0 0 0" xyz="0.0 -0.047 0.1725"/>
+            </xacro:if>          
+          
+            <parent link="trunk"/>
+            <child link="${name}_twist"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${damping}" friction="${friction}"/>
+            <xacro:if value="${(mirror_dae == True)}">
+                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${twist_min*PI/180.0}" upper="${twist_max*PI/180.0}"/>
+            </xacro:if>
+            <xacro:if value="${(mirror_dae == False)}">
+                <limit effort="${twist_torque_max}" velocity="${twist_velocity_max}" lower="${-twist_max*PI/180.0}" upper="${-twist_min*PI/180.0}"/>
+            </xacro:if>  
+        </joint>
+        <link name="${name}_twist">
+            <visual>
+            <origin rpy="0 ${-PI/2.0} 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://hector_description/meshes/hip_a1.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="orange"/>
+            </visual>
+            
+            <collision>
+                <origin rpy="${PI/2.0} 0 0" xyz="0 ${-(twist_length/2.0-twist_offset)*mirror} 0"/>
+                <geometry>
+                    <cylinder length="${twist_length}" radius="${twist_radius}"/>
+                </geometry>
+            </collision>
+
+            <inertial>
+                <origin rpy="0 0 0" xyz="${twist_com_x} ${twist_com_y*mirror} ${twist_com_z}"/>
+                <mass value="${twist_mass}"/>
+                <inertia
+                    ixx="${twist_ixx}" ixy="${twist_ixy*mirror}" ixz="${twist_ixz}"
+                    iyy="${twist_iyy}" iyz="${twist_iyz*mirror}"
+                    izz="${twist_izz}"/>       
+            </inertial>          
+            
+            <!-- <inertial>
+            <origin rpy="0 0 0" xyz="0.025109 -0.002292 -0.024732"/>
+            <mass value="0.1"/>
+            <inertia ixx="2.104e-02" ixy="0.0" ixz="0.0" iyy="5.354e-02" iyz="0.0" izz="7.416e-02"/>
+            </inertial> -->
+        </link>
+
+        <joint name="${name}_shoulder_joint" type="revolute">
+            <xacro:if value="${(mirror_dae == True)}">
+            <origin rpy="0 0 0" xyz="0.0 0.0723 0.0"/>
+            </xacro:if>
+            <xacro:if value="${(mirror_dae == False)}">
+            <origin rpy="0 0 0" xyz="0.0 -0.0723 0.0"/>
+            </xacro:if>                
+            <parent link="${name}_twist"/>
+            <child link="${name}_shoulder"/>
+            <axis xyz="0 1 0"/>
+            <dynamics damping="${damping}" friction="${friction}"/>
+            <limit effort="${shoulder_torque_max}" velocity="${shoulder_velocity_max}" lower="${shoulder_min*PI/180.0}" upper="${shoulder_max*PI/180.0}"/>
+        </joint>
+        <link name="${name}_shoulder">
+            <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            
+            <xacro:if value="${(mirror_dae == True)}">
+            <geometry>
+                <mesh filename="package://hector_description/meshes/thigh_a1.dae" scale="1 1 1"/>
+            </geometry>
+            </xacro:if>
+            
+            <xacro:if value="${(mirror_dae == False)}">
+            <geometry>
+                <mesh filename="package://hector_description/meshes/thigh_mirror_a1.dae" scale="1 1 1"/>
+            </geometry>     
+            </xacro:if> 
+            
+            <material name="orange"/>
+            </visual>
+           <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 ${-shoulder_length/2.0}"/>
+                <geometry>
+                    <box size="${shoulder_length} ${shoulder_width} ${shoulder_height}"/>
+                </geometry>      
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="${shoulder_com_x} ${shoulder_com_y*mirror} ${shoulder_com_z}"/>
+                <mass value="${shoulder_mass}"/>
+                <inertia
+                    ixx="${shoulder_ixx}" ixy="${shoulder_ixy*mirror}" ixz="${shoulder_ixz}"
+                    iyy="${shoulder_iyy}" iyz="${shoulder_iyz*mirror}"
+                    izz="${shoulder_izz}"/>       
+            </inertial>
+        </link>
+
+        <joint name="${name}_elbow_joint" type="revolute">
+            <origin rpy="0 -1.5 0" xyz="0.0 0.0 -0.205"/>
+            <parent link="${name}_shoulder"/>
+            <child link="${name}_elbow"/>
+            <axis xyz="0 1 0"/>
+            <dynamics damping="${damping}" friction="${friction}"/>
+            <limit effort="${elbow_torque_max}" velocity="${elbow_velocity_max}" lower="${elbow_min*PI/180.0}" upper="${elbow_max*PI/180.0}"/>
+        </joint>
+        <link name="${name}_elbow">
+            <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://hector_description/meshes/calf_a1.dae" scale="1 1 1"/>
+            </geometry>
+            <material name="orange"/>
+            </visual>
+            <collision>
+                <origin rpy="0 ${PI/2.0} 0" xyz="0 0 ${-elbow_length/2.0}"/>
+                <geometry>
+                    <box size="${elbow_length} ${elbow_width} ${elbow_height}"/>
+                </geometry>      
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="${elbow_com_x} ${elbow_com_y} ${elbow_com_z}"/>
+                <mass value="${elbow_mass}"/>
+                <inertia
+                    ixx="${elbow_ixx}" ixy="${elbow_ixy}" ixz="${elbow_ixz}"
+                    iyy="${elbow_iyy}" iyz="${elbow_iyz}"
+                    izz="${elbow_izz}"/>       
+            </inertial>
+        </link>
+    </xacro:macro>
+</robot>
+

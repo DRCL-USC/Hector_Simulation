@@ -55,7 +55,7 @@ complie the package
 
 
 ### launch and run gazebo simulation:
-* `roslaunch unitree_gazebo biped.launch`
+* `roslaunch unitree_gazebo hector.launch`
 The robot should be standing on the ground 
 
 * In a new terminal, enter and source your workspace, then run: `rosrun hector_control hector_ctrl`

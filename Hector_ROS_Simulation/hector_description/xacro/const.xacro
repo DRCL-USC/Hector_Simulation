@@ -234,4 +234,98 @@
     <xacro:property name="toe_iyz" value="0.0"/>
     <xacro:property name="toe_izz" value="0.000249491"/>
 
+    <!-- twist -->
+    <!-- joint -->
+    <xacro:property name="twist_offset_x" value="0.0"/> 
+    <xacro:property name="twist_offset_y" value="0.0"/> 
+    <xacro:property name="twist_offset_z" value="-0.22"/>
+    <xacro:property name="twist_offset" value="0.019"/>    
+    <xacro:property name="twist_max" value="1.4"/>
+    <xacro:property name="twist_min" value="-1.4"/>
+    <xacro:property name="twist_velocity_max" value="21"/>
+    <xacro:property name="twist_torque_max" value="33.5"/>
+    <!-- collision -->
+    <xacro:property name="twist_x" value="0.01"/> 
+    <xacro:property name="twist_y" value="0.0194"/> 
+    <xacro:property name="twist_z" value="-0.02"/>
+    <xacro:property name="twist_length" value="0.25"/>
+    <xacro:property name="twist_width" value="0.034"/>
+    <xacro:property name="twist_height" value="0.043"/>
+    <xacro:property name="twist_radius" value="0.041"/>
+    <xacro:property name="twist_length" value="0.08"/>    
+    
+    <!-- inertial -->
+    <!-- <xacro:property name="twist_mass" value="1.096"/> -->
+    <xacro:property name="twist_mass" value="0.1096"/>
+    <xacro:property name="twist_com_x" value="-0.001568"/>
+    <xacro:property name="twist_com_y" value="-0.008134"/>
+    <xacro:property name="twist_com_z" value="0.000864"/>
+    <xacro:property name="twist_ixx" value="0.000822113"/>
+    <xacro:property name="twist_ixy" value="-0.000004982"/>
+    <xacro:property name="twist_ixz" value="-0.00003672"/>
+    <xacro:property name="twist_iyy" value="0.000983196"/>
+    <xacro:property name="twist_iyz" value="0.000002811"/>
+    <xacro:property name="twist_izz" value="0.000864753"/>  
+
+
+    <!-- shoulder -->
+    <!-- joint -->
+    <xacro:property name="shoulder_offset_x" value="0.0"/> 
+    <xacro:property name="shoulder_offset_y" value="0.0"/> 
+    <xacro:property name="shoulder_offset_z" value="-0.22"/>
+    <xacro:property name="shoulder_max" value="1.4"/>
+    <xacro:property name="shoulder_min" value="-1.4"/>
+    <xacro:property name="shoulder_velocity_max" value="21"/>
+    <xacro:property name="shoulder_torque_max" value="33.5"/>
+    <!-- collision -->
+    <xacro:property name="shoulder_x" value="0.01"/> 
+    <xacro:property name="shoulder_y" value="0.0194"/> 
+    <xacro:property name="shoulder_z" value="-0.02"/>
+    <xacro:property name="shoulder_length" value="0.25"/>
+    <xacro:property name="shoulder_width" value="0.034"/>
+    <xacro:property name="shoulder_height" value="0.043"/>
+    
+    <!-- inertial -->
+    <!-- <xacro:property name="shoulder_mass" value="1.528"/> -->
+    <xacro:property name="shoulder_mass" value="0.1528"/>
+    <xacro:property name="shoulder_com_x" value="-0.000482"/>
+    <xacro:property name="shoulder_com_y" value="0.02001"/>
+    <xacro:property name="shoulder_com_z" value="-0.031996"/>
+    <xacro:property name="shoulder_ixx" value="0.00991611"/>
+    <xacro:property name="shoulder_ixy" value="0.000010388"/>
+    <xacro:property name="shoulder_ixz" value="0.000250428"/>
+    <xacro:property name="shoulder_iyy" value="0.009280083"/>
+    <xacro:property name="shoulder_iyz" value="-0.00008511"/>
+    <xacro:property name="shoulder_izz" value="0.00178256"/>    
+
+    <!-- elbow -->
+    <!-- joint -->
+    <xacro:property name="elbow_offset_x" value="0.0"/> 
+    <xacro:property name="elbow_offset_y" value="0.0"/> 
+    <xacro:property name="elbow_offset_z" value="-0.22"/>
+    <xacro:property name="elbow_max" value="1.4"/>
+    <xacro:property name="elbow_min" value="-1.4"/>
+    <xacro:property name="elbow_velocity_max" value="21"/>
+    <xacro:property name="elbow_torque_max" value="33.5"/>
+    <!-- collision -->
+    <xacro:property name="elbow_x" value="0.01"/> 
+    <xacro:property name="elbow_y" value="0.0194"/> 
+    <xacro:property name="elbow_z" value="-0.02"/>
+    <xacro:property name="elbow_length" value="0.25"/>
+    <xacro:property name="elbow_width" value="0.016"/>
+    <xacro:property name="elbow_height" value="0.016"/>
+    
+    <!-- inertial -->
+    <!-- <xacro:property name="elbow_mass" value="0.241"/> -->
+    <xacro:property name="elbow_mass" value="0.0241"/>
+    <xacro:property name="elbow_com_x" value="-0.002196"/>
+    <xacro:property name="elbow_com_y" value="-0.000381"/>
+    <xacro:property name="elbow_com_z" value="-0.12338"/>
+    <xacro:property name="elbow_ixx" value="0.006181961"/>
+    <xacro:property name="elbow_ixy" value="0.000000237"/>
+    <xacro:property name="elbow_ixz" value="-0.000002985"/>
+    <xacro:property name="elbow_iyy" value="0.006196546"/>
+    <xacro:property name="elbow_iyz" value="0.000005138"/>
+    <xacro:property name="elbow_izz" value="0.000034774"/>    
+
 </robot>

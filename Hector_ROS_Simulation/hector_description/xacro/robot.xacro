@@ -120,6 +120,33 @@
             </geometry>
         </collision>
     </link>
+<!-- TODO: add inertial properties and update controller -->
+    <joint name="head" type="fixed">
+        <parent link="trunk"/>
+        <child link="head_link"/>
+        <origin rpy="0 ${PI} ${PI/2}" xyz="0.07 0.0458 0.315"/>
+    </joint>
+
+    <link name="head_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://hector_description/meshes/Head.STL" scale="0.001 0.001 0.001"/>
+                </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size=".001 .001 .001"/>
+            </geometry>
+        </collision>
+    </link>    
 
     <xacro:leg name="L" mirror="1" mirror_dae="False">
         <origin rpy="0 0 0" xyz="${hip_offset_x} ${hip_offset_y} ${-hip_offset_z}"/>

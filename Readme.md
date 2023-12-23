@@ -85,6 +85,17 @@ Thank you for choosing our software for your research and development, we highly
 }
 ```
 
+2. Dynamic Loco-manipulation on HECTOR: Humanoid for Enhanced ConTrol and Open-source Research
+https://arxiv.org/pdf/2312.11868.pdf
+```
+@article{li2023dynamic,
+  title={Dynamic Loco-manipulation on HECTOR: Humanoid for Enhanced ConTrol and Open-source Research},
+  author={Li, Junheng and Ma, Junchao and Kolt, Omar and Shah, Manas and Nguyen, Quan},
+  journal={arXiv preprint arXiv:2312.11868},
+  year={2023}
+}
+```
+
 ## Contact Information:
 Yiyu Chen -- yiyuc@usc.edu
 Junheng Li -- junhengl@usc.edu

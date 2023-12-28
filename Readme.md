@@ -32,10 +32,26 @@ Introduction Video: https://youtu.be/NcW-NFwjMh0
 + Run model/simulation in Mechanics Explorer (note that simulation does not run in real-time);
 + User may comment/uncomment arm assembly and control in Simulink model;
 
+## Switch controller for Loco-manipulation:
++ Default controller is LocomotionMPC
++ If using LocoManipulationMPC, please modify MPC block and add a clock to the input for the contact schedule feature.
++ You may create an object for the robot to handle via variable mass blocks in Simscape.
+
 ## Cite Us:
 Thank you for choosing our software for your research and development, we highly appreciate your citing our work:
 
-1. Force-and-moment-based model predictive control for achieving highly dynamic locomotion on bipedal robots: https://arxiv.org/abs/2104.00065
+1. HECTOR Project: "Dynamic Loco-manipulation on HECTOR: Humanoid for Enhanced ConTrol and Open-source Research"
+https://arxiv.org/pdf/2312.11868.pdf
+```
+@article{li2023dynamic,
+  title={Dynamic Loco-manipulation on HECTOR: Humanoid for Enhanced ConTrol and Open-source Research},
+  author={Li, Junheng and Ma, Junchao and Kolt, Omar and Shah, Manas and Nguyen, Quan},
+  journal={arXiv preprint arXiv:2312.11868},
+  year={2023}
+}
+```
+
+2. Force-and-moment-based Locomotion MPC: "Force-and-moment-based model predictive control for achieving highly dynamic locomotion on bipedal robots"  https://arxiv.org/abs/2104.00065
 ``` 
   @inproceedings{li2021force,
   title={Force-and-moment-based model predictive control for achieving highly dynamic locomotion on bipedal robots},

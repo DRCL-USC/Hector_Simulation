@@ -98,8 +98,8 @@ https://arxiv.org/pdf/2312.11868.pdf
 
 
 ## Contact Information:
-Yiyu Chen -- yiyuc@usc.edu
 Junheng Li -- junhengl@usc.edu
+Yiyu Chen -- yiyuc@usc.edu
 
 ## License 
 Please read the License.md for details. 

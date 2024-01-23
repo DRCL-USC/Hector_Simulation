@@ -10,6 +10,8 @@ For humanoid ROS model with arms use the ROS_Humanoid_Simulation branch.
 
 Introduction Video: https://youtu.be/NcW-NFwjMh0
 
+Video associated with preprint "Dynamic Loco-manipulation on HECTOR: Humanoid for Enhanced ConTrol and Open-source Research": https://youtu.be/-r0QoxQgshk
+
 ## Dependencies:
 * [Boost](http://www.boost.org) (version 1.5.4 or higher)
 * [CMake](http://www.cmake.org) (version 2.8.3 or higher)

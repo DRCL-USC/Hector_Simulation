@@ -125,7 +125,9 @@ namespace unitree_legged_control
         lastState.dq = 0;
         lastCmd.tau = 0;
         lastState.tauEst = 0;
+        lastCmd.mode = PMSM;
         command.initRT(lastCmd);
+        
 
         pid_controller_.reset();
     }

@@ -69,7 +69,6 @@ int main(int argc, char ** argv)
         rate.sleep();
     }
     
-    system("stty sane");  //Terminal back to normal
     delete _controlData;
     return 0;
 

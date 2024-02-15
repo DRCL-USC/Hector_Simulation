@@ -107,5 +107,5 @@ Yiyu Chen -- yiyuc@usc.edu
 Please read the License.md for details. 
 
 ## Acknowledgement：
-The authors would like to express special thanks to MIT Biomimetic Lab for providing the [cheetah MPC framework](https://github.com/dbdxnuliba/mit-biomimetics_Cheetah) and Unitree Robotics for providing the Unitree gazebo simulation framework.
+The authors would like to express special thanks to MIT Biomimetic Lab for providing the [cheetah MPC framework](https://github.com/mit-biomimetics/Cheetah-Software) and Unitree Robotics for providing the Unitree gazebo simulation framework.
 

@@ -82,7 +82,7 @@ end
 %% Initial Condition/Parameter of Robot State/Joints
 body_x0 = 0;
 body_y0 = 0;
-body_z0 = 0.525; % m
+body_z0 = 0.55; % m
 current_height = body_z0;
 body_v0 = [0 0 0];
 body_R = [0 0 0]; % deg.
@@ -99,24 +99,24 @@ hip2_dq0_R = 0;
 hip2_max = 18;
 hip2_min = -18;
 % thigh (Ry joint)
-thigh_q0 = 45;
+thigh_q0 = 45*1;
 thigh_dq0 = 0;
 thigh_max = 120;
 thigh_min = -120;
 % calf (Ry joint)
-calf_q0 = -90;
+calf_q0 = -90*1;
 calf_dq0 = 0;
 knee_max = -15;
 knee_min = -160;
 % toe/ankle (Ry joint)
-toe_q0 = 45;
+toe_q0 = 45*1;
 toe_dq0 = 0;
 ankle_max = 75;
 ankle_min = -75;
 
 % arms:
 %initiate addArm
-addArm = 0;
+addArm = 1;
 % shoulder Roll(Rx joint):
 shoulderx_q0 = 0;
 shoulderx_min = -15;

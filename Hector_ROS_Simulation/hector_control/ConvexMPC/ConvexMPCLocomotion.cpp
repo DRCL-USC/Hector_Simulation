@@ -385,7 +385,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
          trajAll[12*i + 4] = seResult.position[1] + i * dtMPC * v_des_world[1]; 
         }
         if (stateCommand->data.stateDes[11] == 0){
-        trajAll[12*i + 4] = trajInitial[4];
+        trajAll[12*i + 2] = trajInitial[2];
          }
         else{
         trajAll[12*i + 2] = yaw + i * dtMPC * stateCommand->data.stateDes[11];

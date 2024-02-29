@@ -101,7 +101,7 @@ s8 near_zero(fpt a)
   return (a < 0.0001 && a > -.0001);
 }
 
-s8 near_one(fpt a)
+s8 near_two(fpt a)
 {
   return near_zero(a - 2);
 }
@@ -603,7 +603,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
     {
 
 
-      if (near_one(c_row[j]))
+      if (near_two(c_row[j]))
       {
           new_vars -= 6;
           new_cons -= 8;

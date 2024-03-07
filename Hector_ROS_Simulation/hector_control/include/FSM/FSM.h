@@ -4,18 +4,21 @@
 #include "FSMState.h"
 #include "FSMState_Passive.h"
 #include "FSMState_Walking.h"
+#include "FSMState_TO.h"
 #include "../common/enumClass.h"
 
 struct FSMStateList{
     FSMState *invalid;
     FSMState_Passive *passive;
     FSMState_Walking *walking;
+    FSMState_TO *TO;
 
    
     void deletePtr(){
         delete invalid;
         delete passive;
         delete walking;
+        delete TO;
     }  
 };
 

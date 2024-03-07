@@ -345,7 +345,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
 
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
-                              seResult.rpy[2],    // 2
+                              seResult.rpy[2]*0,    // 2
                               xStart,                                   // 3
                               yStart,                                   // 4
                               0.55 ,   // 5

@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/obot/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/opt/openrobots/include/**",
+        "/opt/openrobots/include/**",
+        "/home/obot/catkin_ws/src/Hector_Simulation/Hector_ROS_Simulation/hector_control/include/**",
+        "/home/obot/catkin_ws/src/Hector_Simulation/Hector_ROS_Simulation/unitree_ros/unitree_controller/include/**",
+        "/home/obot/catkin_ws/src/Hector_Simulation/Hector_ROS_Simulation/unitree_ros/unitree_legged_control/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

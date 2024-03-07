@@ -20,7 +20,7 @@ void LegControllerCommand::zero(){
     double kdtoe = 0;
 }
 
-/*!
+/*
  * Zero leg data
  */ 
 void LegControllerData::zero(){

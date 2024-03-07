@@ -18,7 +18,6 @@ struct ControlFSMData {
   IOInterface *_interface;
   LowlevelCmd *_lowCmd;
   LowlevelState *_lowState;
-
   void sendRecv(){
     _interface->sendRecv(_lowCmd, _lowState);
   }

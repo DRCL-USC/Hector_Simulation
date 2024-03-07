@@ -4,10 +4,10 @@
 FSM::FSM(ControlFSMData *data)
     :_data(data)
 {
-
     _stateList.invalid = nullptr;
     _stateList.passive = new FSMState_Passive(_data);
     _stateList.walking = new FSMState_Walking(_data);
+    _stateList.TO = new FSMState_TO(_data);
 
     initialize();
 }
@@ -46,7 +46,6 @@ void FSM::run()
     }
     else if(_mode == FSMMode::CHANGE)
     {
-        // std::cout << "change state" << std::endl;
         _currentState->exit();
         _currentState = _nextState;
         _currentState->enter();

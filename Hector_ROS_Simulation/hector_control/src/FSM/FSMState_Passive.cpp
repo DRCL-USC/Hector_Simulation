@@ -31,7 +31,7 @@ void FSMState_Passive::exit()
 FSMStateName FSMState_Passive::checkTransition()
 {
     if(_lowState->userCmd == UserCommand::L1_X){
-        FSMStateName::WALKING;
+        FSMStateName::MPC;
     }
     else{
         return FSMStateName::PASSIVE;

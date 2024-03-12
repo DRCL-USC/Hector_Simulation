@@ -33,10 +33,11 @@ enum class FSMStateName{
     PASSIVE,
     PDSTAND,
     QPSTAND,
-    WALKING,
+    MPC,
     PUSHING,
     PROBE,
     SLAM,       // slam
+    TO,
 };
 
 

@@ -7,7 +7,8 @@ FSM::FSM(ControlFSMData *data)
 
     _stateList.invalid = nullptr;
     _stateList.passive = new FSMState_Passive(_data);
-    _stateList.walking = new FSMState_Walking(_data);
+    _stateList.mpc = new FSMState_MPC(_data);
+    _stateList.TO = new FSMState_TO(_data);
 
     initialize();
 }
@@ -19,7 +20,7 @@ FSM::~FSM(){
 void FSM::initialize()
 {
     count = 0;
-    _currentState = _stateList.walking;
+    _currentState = _stateList.mpc;
     _currentState -> enter();
     _nextState = _currentState;
     _mode = FSMMode::NORMAL;
@@ -46,7 +47,6 @@ void FSM::run()
     }
     else if(_mode == FSMMode::CHANGE)
     {
-        // std::cout << "change state" << std::endl;
         _currentState->exit();
         _currentState = _nextState;
         _currentState->enter();
@@ -67,8 +67,8 @@ FSMState* FSM::getNextState(FSMStateName stateName)
         case FSMStateName::PASSIVE:
             return _stateList.passive;
         break;
-        case FSMStateName::WALKING:
-            return _stateList.walking;
+        case FSMStateName::MPC:
+            return _stateList.mpc;
         break;
         default:
             return _stateList.invalid;

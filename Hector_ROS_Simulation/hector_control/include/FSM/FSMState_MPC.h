@@ -1,18 +1,19 @@
-#ifndef WALKING_H
-#define WALKING_H
+#ifndef MPC_H
+#define MPC_H
 
 #include "FSMState.h"
 #include "../../ConvexMPC/ConvexMPCLocomotion.h"
 
-class FSMState_Walking: public FSMState
+class FSMState_MPC: public FSMState
 {
     public:
-        FSMState_Walking(ControlFSMData *data);
-        ~FSMState_Walking(){}
+        FSMState_MPC(ControlFSMData *data);
+        ~FSMState_MPC(){}
         void enter();
         void run();
         void exit();
         FSMStateName checkTransition();
+        int gaitNum; // Specifiy 1 for standing or 2 for walking
     
     private:
         ConvexMPCLocomotion Cmpc;

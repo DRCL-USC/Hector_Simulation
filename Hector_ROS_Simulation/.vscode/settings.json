@@ -66,6 +66,9 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "dense": "cpp"
+        "dense": "cpp",
+        "complex": "cpp",
+        "ranges": "cpp",
+        "cinttypes": "cpp"
     }
 }

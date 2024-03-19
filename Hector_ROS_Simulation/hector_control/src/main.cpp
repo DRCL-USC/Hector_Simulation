@@ -31,7 +31,7 @@ int main(int argc, char ** argv)
 
     double dt = 0.001;
     Biped biped;
-    biped.setBiped();
+    // biped.setBiped();
 
     LegController* legController = new LegController(biped);
     LowlevelCmd* cmd = new LowlevelCmd();

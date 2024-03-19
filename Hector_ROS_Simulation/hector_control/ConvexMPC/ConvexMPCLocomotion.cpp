@@ -64,6 +64,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
   // some first time initialization
   if (firstRun)
   {
+    swing.initSwingLegController(&data, gait, dtMPC);
     std::cout << "Run MPC" << std::endl;
     world_position_desired[0] = seResult.position[0];
     world_position_desired[1] = seResult.position[1];
@@ -199,38 +200,40 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
     std::cout << "swing " << foot << ": " << swingState << std::endl;
     std::cout << "Contact " << foot << ": " << contactState << std::endl;
     Vec3<double> pFootWorld;
+    
+    swing.updateSwingLeg(); // update swing leg controller
 
     if (swingState > 0) // foot is in swing
     {
-      if (firstSwing[foot])
-      {
-        firstSwing[foot] = false;
-        footSwingTrajectories[foot].setInitialPosition(pFoot[foot]);
-      }
+      // if (firstSwing[foot])
+      // {
+      //   firstSwing[foot] = false;
+      //   footSwingTrajectories[foot].setInitialPosition(pFoot[foot]);
+      // }
 
-      footSwingTrajectories[foot].computeSwingTrajectoryBezier(swingState, swingTimes[foot]);
+      // footSwingTrajectories[foot].computeSwingTrajectoryBezier(swingState, swingTimes[foot]);
 
-      Vec3<double> pDesFootWorld = footSwingTrajectories[foot].getPosition().cast<double>();
-      Vec3<double> vDesFootWorld = footSwingTrajectories[foot].getVelocity().cast<double>();
-      double side = -1.0 ;
-      if (foot == 1){
-        side = 1.0;
-      }
-      Vec3<double> hipOffset = {0, side*-0.02, -0.136};
-      Vec3<double> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) - hipOffset;
-      Vec3<double> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
-      if (vDesLeg.hasNaN())
-      {
-        vDesLeg << 0, 0, 0;
-      }
+      // Vec3<double> pDesFootWorld = footSwingTrajectories[foot].getPosition().cast<double>();
+      // Vec3<double> vDesFootWorld = footSwingTrajectories[foot].getVelocity().cast<double>();
+      // double side = -1.0 ;
+      // if (foot == 1){
+      //   side = 1.0;
+      // }
+      // Vec3<double> hipOffset = {0, side*-0.02, -0.136};
+      // Vec3<double> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) - hipOffset;
+      // Vec3<double> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
+      // if (vDesLeg.hasNaN())
+      // {
+      //   vDesLeg << 0, 0, 0;
+      // }
 
-      data._legController->commands[foot].feedforwardForce << 0, 0, 0 , 0 , 0 , 0;
-      data._legController->commands[foot].pDes = pDesLeg;
-      data._legController->commands[foot].vDes = vDesLeg;
-      data._legController->commands[foot].kpCartesian = Kp;
-      data._legController->commands[foot].kdCartesian = Kd;
-      data._legController->commands[foot].kptoe = 5; // 0
-      data._legController->commands[foot].kdtoe = 0.1;
+      // data._legController->commands[foot].feedforwardForce << 0, 0, 0 , 0 , 0 , 0;
+      // data._legController->commands[foot].pDes = pDesLeg;
+      // data._legController->commands[foot].vDes = vDesLeg;
+      // data._legController->commands[foot].kpCartesian = Kp;
+      // data._legController->commands[foot].kdCartesian = Kd;
+      // data._legController->commands[foot].kptoe = 5; // 0
+      // data._legController->commands[foot].kdtoe = 0.1;
       se_contactState[foot] = contactState;
     }
 

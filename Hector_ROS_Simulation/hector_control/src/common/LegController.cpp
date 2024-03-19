@@ -64,26 +64,26 @@ void LegController::updateCommand(LowlevelCmd* cmd){
             std::cout << "legtau" << j << ": "<< legtau(j) << std::endl;
         }
 
-        // cartesian PD control for swing foot
-        if(commands[i].kpCartesian(0,0) != 0 || commands[i].kdCartesian(0,0) != 0)
-        {
-            Vec3<double> footForce_3d = commands[i].kpCartesian * (commands[i].pDes - data[i].p) +
-                                        commands[i].kdCartesian * (commands[i].vDes - data[i].v);
+        // // cartesian PD control for swing foot
+        // if(commands[i].kpCartesian(0,0) != 0 || commands[i].kdCartesian(0,0) != 0)
+        // {
+        //     Vec3<double> footForce_3d = commands[i].kpCartesian * (commands[i].pDes - data[i].p) +
+        //                                 commands[i].kdCartesian * (commands[i].vDes - data[i].v);
           
-            Vec5<double> swingtau = data[i].J_force.transpose() * footForce_3d ;
+        //     Vec5<double> swingtau = data[i].J_force.transpose() * footForce_3d ;
 
-            // maintain hip angle tracking
-            double kphip1 = 15;
-            double kdhip1 = 1;
-            swingtau(0) = kphip1*(0-data[i].q(0)) + kdhip1*(0-data[i].qd(0));
-            // make sure foot is parallel with the ground
-            swingtau(4) = commands[i].kptoe * (-data[i].q(3)-data[i].q(2)-data[i].q(4))+commands[i].kdtoe*(0-data[i].qd(4));
+        //     // maintain hip angle tracking
+        //     double kphip1 = 15;
+        //     double kdhip1 = 1;
+        //     swingtau(0) = kphip1*(0-data[i].q(0)) + kdhip1*(0-data[i].qd(0));
+        //     // make sure foot is parallel with the ground
+        //     swingtau(4) = commands[i].kptoe * (-data[i].q(3)-data[i].q(2)-data[i].q(4))+commands[i].kdtoe*(0-data[i].qd(4));
 
-            for(int j = 0; j < 5; j++)
-            {
-                legtau(j) += swingtau(j);
-            }
-        }
+        //     for(int j = 0; j < 5; j++)
+        //     {
+        //         legtau(j) += swingtau(j);
+        //     }
+        // }
 
         commands[i].tau += legtau;
 

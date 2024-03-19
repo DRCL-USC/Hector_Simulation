@@ -3,6 +3,7 @@
 
 #include <eigen3/Eigen/Dense>
 #include "../include/common/FootSwingTrajectory.h"
+#include "../include/common/SwingLegController.h"
 #include "../include/common/ControlFSMData.h"
 #include "../include/common/cppTypes.h"
 #include "GaitGenerator.h"
@@ -47,6 +48,7 @@ public:
 private:
     void updateMPCIfNeeded(int* mpcTable, ControlFSMData& data, bool omniMode);
     void GenerateTrajectory(int* mpcTable, ControlFSMData& data, bool omniMode);
+    swingLegController swing;
 
     // Locomotion and Gait Parameters
     int iterationsBetweenMPC;

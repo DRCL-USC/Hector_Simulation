@@ -36,7 +36,17 @@ class swingLegController {
         Vec3<double> vFoot_b[nLegs];                        
         Vec2<double> swingStates;
         Vec2<double> swingTimes;
+        Vec5<double> qDes[nLegs];  
+        Vec3<double> L_hipYawLocation;
+        Vec3<double> L_hipRollLocation;
+        Vec3<double> R_hipYawLocation;
+        Vec3<double> R_hipRollLocation;
+        bool firstSwing[nLegs] = {true, true};        
+        
+        
         void updateFootPosition();
+        void updateSwingStates();
+
 
         // constants can be adjusted if needed
         const double _dt = 0.001;

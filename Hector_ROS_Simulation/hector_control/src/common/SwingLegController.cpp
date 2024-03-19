@@ -30,3 +30,10 @@ void swingLegController::updateFootPosition(){
     pFoot_w[0][2] = 0.0;
     pFoot_w[1][2] = 0.0;
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+
+void swingLegController::updateSwingStates(){
+    swingStates = gait->getSwingSubPhase();
+}

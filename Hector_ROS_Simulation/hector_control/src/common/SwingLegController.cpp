@@ -20,6 +20,19 @@ swingLegController::swingLegController(ControlFSMData *data, Gait* gait, double 
 /******************************************************************************************************/
 /******************************************************************************************************/
 
+void swingLegController::updateSwingLeg(){
+    seResult = data->_stateEstimator->getResult();
+    updateFootPosition();
+    updateSwingStates();
+    updateSwingTimes();
+    computeFootPlacement();     
+    computeFootDesiredPosition();
+    setDesiredJointState();
+}
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+
 void swingLegController::updateFootPosition(){
 
     for(int i = 0; i < nLegs; i++){    

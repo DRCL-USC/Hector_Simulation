@@ -21,7 +21,13 @@ class swingLegController {
 
         //Setter method for data, gait, and dtSwing used at initialization only
         void initSwingLegController(ControlFSMData *data, Gait* gait, double dtSwing);
-
+        
+        /**
+         * @brief Update the swing leg controller
+         * @note This function should be called at every control loop iteration
+         */
+        void updateSwingLeg();
+        
         /**
          * @brief Compute an approximate inverse kinematics for 5-DoF swing leg
          * @param bodyPositionDesired: desired position of the end effector in the body frame

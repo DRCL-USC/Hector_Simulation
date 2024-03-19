@@ -37,3 +37,19 @@ void swingLegController::updateFootPosition(){
 void swingLegController::updateSwingStates(){
     swingStates = gait->getSwingSubPhase();
 }
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+
+void swingLegController::updateSwingTimes(){
+    for(int leg = 0; leg < nLegs; leg++){
+        if(firstSwing[leg]){
+            swingTimes[leg] = _dtSwing * gait->_swing;
+        }else{
+            swingTimes[leg] -= _dt;
+            if(swingTimes[leg] <= 0){
+                firstSwing[leg] = true;
+            }
+        }
+    }
+}

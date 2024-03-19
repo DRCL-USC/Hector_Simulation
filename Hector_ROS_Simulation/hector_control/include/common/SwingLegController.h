@@ -22,6 +22,14 @@ class swingLegController {
         //Setter method for data, gait, and dtSwing used at initialization only
         void initSwingLegController(ControlFSMData *data, Gait* gait, double dtSwing);
 
+        /**
+         * @brief Compute an approximate inverse kinematics for 5-DoF swing leg
+         * @param bodyPositionDesired: desired position of the end effector in the body frame
+         * @param leg: leg index (0 for left, 1 for right)  
+         * @param jointAngles: output joint angles
+        */
+        void computeIK(const Vec3<double> &bodyPositionDesired, Eigen::Matrix<double, 5, 1> &jointAngles, int leg);
+ 
         
 
     private:
@@ -54,7 +62,12 @@ class swingLegController {
 
         // constants can be adjusted if needed
         const double _dt = 0.001;
-        const double footHeight = 0.1;        
+        const double footHeight = 0.1;    
+
+        // utility functions
+        double clamp(double val, double minVal, double maxVal) {
+                return std::max(minVal, std::min(val, maxVal));
+        }                            
 
 }; // class swingLegController
 

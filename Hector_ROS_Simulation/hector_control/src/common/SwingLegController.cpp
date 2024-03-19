@@ -24,7 +24,7 @@ void swingLegController::updateFootPosition(){
 
     for(int i = 0; i < nLegs; i++){    
     pFoot_w[i] =  seResult.position + seResult.rBody.transpose() 
-                * ( data->_biped->getHipLocation(i) + data->_legController->data[i].p); 
+                * ( data->_biped->getHipYawLocation(i) + data->_legController->data[i].p); 
     }
 
     pFoot_w[0][2] = 0.0;

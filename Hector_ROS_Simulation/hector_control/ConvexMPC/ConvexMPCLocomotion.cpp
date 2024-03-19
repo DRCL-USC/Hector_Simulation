@@ -58,7 +58,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
   for (int i = 0; i < 2; i++)
   {
     pFoot[i] = seResult.position + seResult.rBody.transpose() 
-    * (data._biped->getHip2Location(i) + data._legController->data[i].p);
+    * (data._biped->getHipYawLocation(i) + data._legController->data[i].p);
   }
 
   // some first time initialization
@@ -135,7 +135,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
       footSwingTrajectories[i].setHeight(0.1);
       Vec3<double> offset(0, side_sign[i] * 0.0, -0.0);
       // simple heuristic function
-      Vec3<double> pRobotFrame = (data._biped->getHip2Location(i) + offset);
+      Vec3<double> pRobotFrame = (data._biped->getHipYawLocation(i) + offset);
  
       Vec3<double> des_vel;
 
@@ -240,7 +240,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
       footSwingTrajectories[foot].computeSwingTrajectoryBezier(swingState, swingTimes[foot]);
       Vec3<double> pDesFootWorld = footSwingTrajectories[foot].getPosition().cast<double>();
       Vec3<double> vDesFootWorld = footSwingTrajectories[foot].getVelocity().cast<double>();
-      Vec3<double> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) - data._biped->getHip2Location(foot);
+      Vec3<double> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) - data._biped->getHipYawLocation(foot);
       Vec3<double> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
       if (vDesLeg.hasNaN())
         {

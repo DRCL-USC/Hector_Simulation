@@ -3,68 +3,42 @@
 
 #include <vector>
 #include "cppTypes.h"
-class Biped{
-  public:
-    void setBiped(){
-        
-           mass = 13.856;
 
-            leg_offset_x = 0.0;
-            leg_offset_y = 0.047;//0.057;
-            leg_offset_z = -0.1360;//-0.125;
+class Biped {
+    public:
+        Biped() :
+            mass(13.856),
+            leg_yaw_offset_x(0.0),
+            leg_yaw_offset_y(-0.047),
+            leg_yaw_offset_z(-0.126),
+            leg_roll_offset_x(0.0465),
+            leg_roll_offset_y(0.015),
+            leg_roll_offset_z(-0.0705),
+            hipLinkLength(0.038),
+            thighLinkLength(0.22),
+            calfLinkLength(0.22) {}
 
-            leg_offset_x2 = 0.0;
-            leg_offset_y2 = 0.047;//0.057;
-            leg_offset_z2 = -0.136;
-
-            hipLinkLength = 0.038; // hip offset in const.xacro
-            thighLinkLength = 0.22;
-            calfLinkLength = 0.22;
-        
-    }
-    int robot_index; // 1 for Aliengo, 2 for A1
-    double hipLinkLength;
-    double thighLinkLength;
-    double calfLinkLength;
-    double leg_offset_x;
-    double leg_offset_y;
-    double leg_offset_z;
-    double leg_offset_x2;
-    double leg_offset_y2;
-    double leg_offset_z2;
-    double mass;
-    Vec3<double> getHipLocation(int leg){
-        assert(leg >=0 && leg <2);
-        Vec3<double> pHip = Vec3<double>::Zero();
-        if (leg == 0){
-            pHip(0) = leg_offset_x;
-            pHip(1) = leg_offset_y;
-            pHip(2) = leg_offset_z;
+        Vec3<double> getHipYawLocation(int leg) const {
+            checkLegIndex(leg);
+            return Vec3<double>(leg_yaw_offset_x, leg == 0 ? leg_yaw_offset_y : -leg_yaw_offset_y, leg_yaw_offset_z);
         }
-        if (leg == 1){
-            pHip(0) = leg_offset_x;
-            pHip(1) = -leg_offset_y;
-            pHip(2) = leg_offset_z;
+
+        Vec3<double> getHipRollLocation(int leg) const {
+            checkLegIndex(leg);
+            return Vec3<double>(leg_roll_offset_x, leg == 0 ? leg_roll_offset_y : -leg_roll_offset_y, leg_roll_offset_z);
         }
-        return pHip;
+
+    private:
+        void checkLegIndex(int leg) const {
+            if (leg < 0 || leg >= 2) {
+                throw std::invalid_argument("Invalid leg index");
+            }
+        }
+
+        const double hipLinkLength, thighLinkLength, calfLinkLength;
+        const double leg_yaw_offset_x, leg_yaw_offset_y, leg_yaw_offset_z;
+        const double leg_roll_offset_x, leg_roll_offset_y, leg_roll_offset_z;
+        const double mass;
     };
-
-    Vec3<double> getHip2Location(int leg){
-        assert(leg >=0 && leg <2);
-        Vec3<double> pHip2 = Vec3<double>::Zero();
-        if (leg == 0){
-            pHip2(0) = leg_offset_x2;
-            pHip2(1) = leg_offset_y2;
-            pHip2(2) = leg_offset_z2;
-        }
-        if (leg == 1){
-            pHip2(0) = leg_offset_x2;
-            pHip2(1) = -leg_offset_y2;
-            pHip2(2) = leg_offset_z2;
-        }
-        return pHip2;
-    };
-
-};
 
 #endif

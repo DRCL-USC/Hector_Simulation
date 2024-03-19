@@ -48,6 +48,7 @@ class swingLegController {
         void updateSwingStates();
         void updateSwingTimes();
         void computeFootPlacement();
+        void computeFootDesiredPosition();
 
 
 

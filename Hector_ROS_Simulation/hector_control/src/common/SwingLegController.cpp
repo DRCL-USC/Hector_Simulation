@@ -7,11 +7,34 @@ swingLegController::swingLegController(ControlFSMData *data, Gait* gait, double 
     this->data = data;
     this->gait = gait;
     _dtSwing = dtSwing;
-    seResult = data->_stateEstimator->getResult();
+    L_hipYawLocation = data->_biped->getHipYawLocation(0);
+    L_hipRollLocation = data->_biped->getHipRollLocation(0);
+    R_hipYawLocation = data->_biped->getHipYawLocation(1);
+    R_hipRollLocation = data->_biped->getHipRollLocation(1);
     updateFootPosition();
     
     for(int i = 0; i < nLegs; i++){
       footSwingTrajectory[i].setHeight(0.0);
+      footSwingTrajectory[i].setInitialPosition(pFoot_w[i]);
+      footSwingTrajectory[i].setFinalPosition(pFoot_w[i]);
+    }
+}
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+
+void swingLegController::initSwingLegController(ControlFSMData *data, Gait* gait, double dtSwing){
+    this->data = data;
+    this->gait = gait;
+    _dtSwing = dtSwing;
+    L_hipYawLocation = data->_biped->getHipYawLocation(0);
+    L_hipRollLocation = data->_biped->getHipRollLocation(0);
+    R_hipYawLocation = data->_biped->getHipYawLocation(1);
+    R_hipRollLocation = data->_biped->getHipRollLocation(1);
+    updateFootPosition();
+    
+    for(int i = 0; i < nLegs; i++){
+      footSwingTrajectory[i].setHeight(0.12);
       footSwingTrajectory[i].setInitialPosition(pFoot_w[i]);
       footSwingTrajectory[i].setFinalPosition(pFoot_w[i]);
     }

@@ -16,10 +16,19 @@ class swingLegController {
         static constexpr int nLegs = 2;
     
         swingLegController() = default;
-        swingLegController(ControlFSMData *data, Gait* gait, double dtSwing);
-        ~swingLegController();
+        ~swingLegController() = default;
 
-        //Setter method for data, gait, and dtSwing used at initialization only
+        swingLegController(ControlFSMData *data, Gait* gait, double dtSwing);
+
+        /**
+         * @brief Initialize the swing leg controller
+         * @param data: pointer to the control data
+         * @param gait: pointer to the gait generator
+         * @param dtSwing: time step for the swing leg controller
+         * @note This function is an alternative to the constructor in case 
+         *       the gait generator and control data are not available at 
+         *       the time of construction
+        */
         void initSwingLegController(ControlFSMData *data, Gait* gait, double dtSwing);
         
         /**

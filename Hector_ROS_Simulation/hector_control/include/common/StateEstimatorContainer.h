@@ -58,6 +58,14 @@ struct StateEstimate {
     Vec3<double> aBody, aWorld;
 };
 
+struct CheaterState{
+  Quat<double> orientation;
+  Vec3<double> position;
+  Vec3<double> omegaBody;
+  Vec3<double> vBody;
+  Vec3<double> acceleration;
+};
+
 
 /*!
  * input for state estimation

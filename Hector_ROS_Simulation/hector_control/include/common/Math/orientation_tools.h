@@ -199,6 +199,7 @@ Mat3<typename T::Scalar> quaternionToRotationMatrix(
   return R;
 }
 
+
 /*!
  * Convert a quaternion to RPY.  Uses ZYX order (yaw-pitch-roll), but returns
  * angles in (roll, pitch, yaw).
@@ -208,7 +209,7 @@ Vec3<typename T::Scalar> quatToRPY(const Eigen::MatrixBase<T>& q) {
   static_assert(T::ColsAtCompileTime == 1 && T::RowsAtCompileTime == 4,
                 "Must have 4x1 quat");
   Vec3<typename T::Scalar> rpy;
-  typename T::Scalar as = std::min(2. * (q[2] * q[0] - q[1] * q[3]), .99999);
+  typename T::Scalar as = std::min(2. * (q[2] * q[0] - q[1] * q[3]), 1.00001);
   rpy(0) =
       std::atan2(2 * (q[0] * q[1] + q[2] * q[3]),
                   1. - 2. * ( q[1]*q[1] + q[2]*q[2]));
@@ -218,6 +219,7 @@ Vec3<typename T::Scalar> quatToRPY(const Eigen::MatrixBase<T>& q) {
                  1. - 2. *( q[2]*q[2] + q[3]*q[3]));
   return rpy;
 }
+
 
 template <typename T>
 Quat<typename T::Scalar> rpyToQuat(const Eigen::MatrixBase<T>& rpy) {

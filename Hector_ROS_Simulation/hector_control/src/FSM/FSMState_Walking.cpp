@@ -30,7 +30,7 @@ void FSMState_Walking::run()
 
     v_des_body[0] = (double)invNormalize(_userValue.ly, -0.75, 0.75);
     v_des_body[1] = (double)invNormalize(_userValue.rx, -0.25, 0.25);
-    turn_rate = (double)invNormalize(_userValue.lx, -0.5, 0.5);
+    turn_rate = (double)invNormalize(_userValue.lx, -1.5, 1.5);
     _data->_desiredStateCommand->setStateCommands(roll, pitch, v_des_body, turn_rate);
     
     Cmpc.setGaitNum(2); // 2 for walking

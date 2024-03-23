@@ -60,6 +60,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
     pFoot[i] = seResult.position + seResult.rBody.transpose() 
     * (data._biped->getHipYawLocation(i) + data._legController->data[i].p);
   }
+  // std::cout << "RBody: " << seResult.rBody << std::endl;
 
   // some first time initialization
   if (firstRun)
@@ -150,7 +151,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
 
       
       double p_rel_max = 0.4;
-      double pfx_rel = -0.015 + seResult.vWorld[0] * 0.5 * gait->_stance * dtMPC +
+      double pfx_rel =  seResult.vWorld[0] * 0.5 * gait->_stance * dtMPC +
                        0.02 * (seResult.vWorld[0] - v_des_world[0]);
 
       double pfy_rel = seResult.vWorld[1] * 0.5 * gait->_stance * dtMPC +
@@ -245,6 +246,7 @@ void ConvexMPCLocomotion::run(ControlFSMData &data)
       Vec3<double> vDesFootWorld = footSwingTrajectories[foot].getVelocity().cast<double>();
       Vec3<double> pDesLeg = seResult.rBody * (pDesFootWorld - seResult.position) - data._biped->getHipYawLocation(foot);
       Vec3<double> vDesLeg = seResult.rBody * (vDesFootWorld - seResult.vWorld);
+      // std::cout << "RBody: " << seResult.rBody << std::endl;
       if (vDesLeg.hasNaN())
         {
          vDesLeg << 0, 0, 0;
@@ -316,7 +318,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
       r[i] = pFoot[i % 2][i / 2] - seResult.position[i / 2];
     }
     //MPC Weights
-    double Q[12] = {100, 100, 150,  200, 200, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
+    double Q[12] = {100, 100, 250,  200, 200, 300,  1, 1, 1,  1, 1, 1}; // roll pitch yaw x y z droll dpitch dyaw dx dy dz
     double Alpha[12] = {1e-4, 1e-4, 5e-4, 1e-4, 1e-4, 5e-4,   1e-2, 1e-2, 1e-2, 1e-2, 1e-2, 1e-2};
 
     double *weights = Q;
@@ -348,7 +350,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
 
     double trajInitial[12] = {/*rpy_comp[0] + */stateCommand->data.stateDes[3],  // 0
                               /*rpy_comp[1] + */stateCommand->data.stateDes[4],    // 1
-                              seResult.rpy[2]*0,    // 2
+                              seResult.rpy[2],    // 2
                               xStart,                                   // 3
                               yStart,                                   // 4
                               0.55 ,   // 5
@@ -428,7 +430,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
       }
       GRF_R = - seResult.rBody * GRF;
       GRM_R = - seResult.rBody * GRM;
-      std::cout << "RBody: " << seResult.rBody << std::endl;
+      // std::cout << "RBody: " << seResult.rBody << std::endl;
 
       for (int i = 0; i < 3; i++){
         f(i) = GRF_R(i);

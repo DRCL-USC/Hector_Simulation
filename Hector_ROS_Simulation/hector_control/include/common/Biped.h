@@ -8,8 +8,8 @@ class Biped {
     public:
         Biped() :
             mass(13.856),
-            leg_yaw_offset_x(0.0),
-            leg_yaw_offset_y(-0.047),
+            leg_yaw_offset_x(-0.005),
+            leg_yaw_offset_y(-0.057),
             leg_yaw_offset_z(-0.126),
             leg_roll_offset_x(0.0465),
             leg_roll_offset_y(0.015),

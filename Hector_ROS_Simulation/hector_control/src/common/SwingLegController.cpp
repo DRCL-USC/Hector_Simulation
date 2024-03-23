@@ -133,7 +133,7 @@ void swingLegController::computeFootDesiredPosition(){
     for(int foot = 0; foot < nLegs; foot++){
         if(swingStates[foot] > 0){
             if (firstSwing[foot]){
-              std::cout << "firstSwing[" << foot << "] = "<< firstSwing[foot] << "\n";  
+            //   std::cout << "firstSwing[" << foot << "] = "<< firstSwing[foot] << "\n";  
               firstSwing[foot] = false;
               footSwingTrajectory[foot].setInitialPosition(pFoot_w[foot]);
                }

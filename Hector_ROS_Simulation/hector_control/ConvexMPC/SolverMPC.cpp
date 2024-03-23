@@ -420,7 +420,7 @@ void solve_mpc(update_data_t *update, problem_setup *setup)
   x_0 << rpy(0), rpy(1), rpy(2), rs.p, rs.w, rs.v, 9.81f;
   I_world = rs.R * rs.I_body * rs.R.transpose(); // original
 
-  ct_ss_mats(I_world, 10.0, rs.r_feet, Rb, A_ct, B_ct_r);
+  ct_ss_mats(I_world, 9.0, rs.r_feet, Rb, A_ct, B_ct_r);
 
   // Rotation of Foot:
   Matrix<fpt, 3, 3> R_foot_L;

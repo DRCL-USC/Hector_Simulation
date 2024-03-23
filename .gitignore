@@ -1,0 +1,58 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Directory for your build outputs
+/build/
+
+# Auto-generated files
+*.log
+*.dat
+*.d
+*.mk
+*.pc
+
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp
+
+# Other files to ignore
+*.DS_Store
+*.idea/
+*.vscode/
+*.vs/
+
+# Ignore specific project files
+/*.code-workspace
+
+# Ignore specific user settings
+/settings.json

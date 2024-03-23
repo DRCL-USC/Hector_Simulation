@@ -69,7 +69,7 @@ The robot should be standing on the ground
 
 ## Keyboard Control: 
 * Inside the terminal window, use W or S to control x direction speed
-* Use A or D to control robot turning (TODO: seems to have a small bug when turning past 90 degrees)
+* Use A or D to control robot turning 
 * Use J or L to control y direction speed
 
 ## Cite Us:
